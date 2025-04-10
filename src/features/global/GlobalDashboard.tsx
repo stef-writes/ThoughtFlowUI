@@ -21,8 +21,8 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 const mockProjects = [
   {
     id: '1',
-    name: 'Customer Onboarding',
-    description: 'Streamline new customer integration processes',
+    name: 'Frontal Lobe',
+    description: 'Executive functions, decision making, and personality',
     workflows: 3,
     teamSize: 8,
     lastUpdated: '2024-03-15',
@@ -30,20 +30,29 @@ const mockProjects = [
   },
   {
     id: '2',
-    name: 'Product Development',
-    description: 'End-to-end product lifecycle management',
+    name: 'Parietal Lobe',
+    description: 'Sensory integration and spatial awareness',
     workflows: 3,
-    teamSize: 12,
+    teamSize: 6,
     lastUpdated: '2024-03-14',
     status: 'active',
   },
   {
     id: '3',
-    name: 'Quality Assurance',
-    description: 'Automated testing and validation workflows',
+    name: 'Temporal Lobe',
+    description: 'Memory, language processing, and auditory perception',
+    workflows: 3,
+    teamSize: 12,
+    lastUpdated: '2024-03-13',
+    status: 'active',
+  },
+  {
+    id: '4',
+    name: 'Occipital Lobe',
+    description: 'Visual processing and interpretation',
     workflows: 3,
     teamSize: 6,
-    lastUpdated: '2024-03-13',
+    lastUpdated: '2024-03-12',
     status: 'active',
   },
 ];
@@ -65,12 +74,12 @@ const GlobalDashboard: React.FC = () => {
             color: 'text.primary',
             letterSpacing: '-0.5px'
           }}>
-            Projects
+            Lobes
           </Typography>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => {/* Add project logic */}}
+            onClick={() => {/* Add lobe logic */}}
             sx={{
               px: 3,
               py: 1.5,
@@ -83,7 +92,7 @@ const GlobalDashboard: React.FC = () => {
               }
             }}
           >
-            New Project
+            New Lobe
           </Button>
         </Box>
 

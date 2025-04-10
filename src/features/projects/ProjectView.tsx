@@ -24,24 +24,24 @@ import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 const mockWorkflows = [
   {
     id: '1',
-    name: 'Initial Setup',
-    description: 'Configure project settings and initial parameters',
+    name: 'Network 1',
+    description: 'Primary neural network configuration',
     nodes: 5,
     lastRun: '2024-03-15 14:30',
     status: 'active',
   },
   {
     id: '2',
-    name: 'Process Automation',
-    description: 'Automate routine tasks and workflows',
+    name: 'Network 2',
+    description: 'Secondary neural network configuration',
     nodes: 8,
     lastRun: '2024-03-14 09:15',
     status: 'active',
   },
   {
     id: '3',
-    name: 'Quality Checks',
-    description: 'Validate and verify process outputs',
+    name: 'Network 3',
+    description: 'Tertiary neural network configuration',
     nodes: 6,
     lastRun: '2024-03-13 16:45',
     status: 'active',
@@ -55,7 +55,7 @@ const ProjectView: React.FC = () => {
   // Mock project data
   const project = {
     id: projectId,
-    name: `Project ${projectId}`,
+    name: `Lobe ${projectId}`,
   };
 
   return (
@@ -74,7 +74,7 @@ const ProjectView: React.FC = () => {
               '&:hover': { textDecoration: 'underline' }
             }}
           >
-            Projects
+            Lobes
           </Link>
           <Typography color="text.primary">{project.name}</Typography>
         </Breadcrumbs>
@@ -90,12 +90,12 @@ const ProjectView: React.FC = () => {
             color: 'text.primary',
             letterSpacing: '-0.5px'
           }}>
-            Workflows
+            Networks
           </Typography>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => {/* Add workflow logic */}}
+            onClick={() => {/* Add network logic */}}
             sx={{
               px: 3,
               py: 1.5,
@@ -108,7 +108,7 @@ const ProjectView: React.FC = () => {
               }
             }}
           >
-            New Workflow
+            New Network
           </Button>
         </Box>
 

@@ -46,18 +46,25 @@ const CustomNode: React.FC<CustomNodeProps> = ({ data, selected, id, onNodeDoubl
       />
       
       <Box>
-        <Typography variant="h6" gutterBottom>
+        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
           {data.label}
+          <Box component="span" sx={{ 
+            width: 8, 
+            height: 8, 
+            borderRadius: '50%', 
+            bgcolor: 'primary.main',
+            display: 'inline-block'
+          }} />
         </Typography>
         
         {data.selectedSources && data.selectedSources.length > 0 && (
           <Box mb={1}>
             <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap gap={1}>
-              {data.selectedSources.map((sourceId) => (
+              {data.selectedSources.map((sourceId: string) => (
                 <Chip 
                   key={sourceId}
                   label={`From: ${getSourceNodeName(sourceId)}`}
-                  size="small" 
+                  size="small"
                   color="primary" 
                   variant="outlined"
                   sx={{

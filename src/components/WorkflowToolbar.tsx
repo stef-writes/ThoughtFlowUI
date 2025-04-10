@@ -59,7 +59,7 @@ const WorkflowToolbar: React.FC = () => {
               '&:hover': { textDecoration: 'underline' }
             }}
           >
-            Projects
+            Lobes
           </Link>
           <Link
             component={RouterLink}
@@ -70,10 +70,10 @@ const WorkflowToolbar: React.FC = () => {
               '&:hover': { textDecoration: 'underline' }
             }}
           >
-            Project {projectId}
+            Lobe {projectId}
           </Link>
           <Typography color="text.primary">
-            Workflow {workflowId}
+            Network {workflowId}
           </Typography>
         </Breadcrumbs>
       </Box>
