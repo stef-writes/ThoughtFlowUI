@@ -1,4 +1,4 @@
-# ThoughtFlow UI
+# ThoughtfulUI
 
 A modern React-based workflow editor with NLP capabilities and drag-and-drop functionality.
 
