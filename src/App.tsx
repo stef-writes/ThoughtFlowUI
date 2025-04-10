@@ -2,7 +2,9 @@ import { Box, CssBaseline, ThemeProvider, createTheme } from '@mui/material';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import WorkflowCanvas from './components/WorkflowCanvas';
 import WorkflowToolbar from './components/WorkflowToolbar';
-import Home from './components/Home';
+import GlobalDashboard from './features/global/GlobalDashboard';
+import ProjectView from './features/projects/ProjectView';
+import Layout from './components/Layout';
 import { ReactFlowProvider } from 'reactflow';
 import 'reactflow/dist/style.css';
 
@@ -14,6 +16,9 @@ const theme = createTheme({
     },
     secondary: {
       main: '#dc004e',
+    },
+    background: {
+      default: '#f8f9fa',
     },
   },
   typography: {
@@ -49,40 +54,38 @@ function App() {
       <CssBaseline />
       <Router>
         <Routes>
-          <Route path="/" element={<Home />} />
-          <Route
-            path="/workflow"
-            element={
-              <Box sx={{ 
-                display: 'flex', 
-                flexDirection: 'column', 
-                height: '100vh', 
-                width: '100vw',
-                overflow: 'hidden',
-                position: 'fixed',
-                top: 0,
-                left: 0,
-                right: 0,
-                bottom: 0
-              }}>
-                <WorkflowToolbar />
+          <Route element={<Layout />}>
+            <Route path="/" element={<GlobalDashboard />} />
+            <Route path="/projects/:projectId" element={<ProjectView />} />
+            <Route
+              path="/projects/:projectId/workflows/:workflowId"
+              element={
                 <Box sx={{ 
-                  flexGrow: 1, 
-                  position: 'relative',
+                  display: 'flex', 
+                  flexDirection: 'column', 
+                  height: 'calc(100vh - 64px)', // Subtract AppBar height
                   width: '100%',
-                  height: 'calc(100vh - 64px)',
-                  '& .react-flow': {
-                    width: '100%',
-                    height: '100%'
-                  }
+                  overflow: 'hidden',
                 }}>
-                  <ReactFlowProvider>
-                    <WorkflowCanvas />
-                  </ReactFlowProvider>
+                  <WorkflowToolbar />
+                  <Box sx={{ 
+                    flexGrow: 1, 
+                    position: 'relative',
+                    width: '100%',
+                    height: 'calc(100% - 64px)', // Subtract toolbar height
+                    '& .react-flow': {
+                      width: '100%',
+                      height: '100%'
+                    }
+                  }}>
+                    <ReactFlowProvider>
+                      <WorkflowCanvas />
+                    </ReactFlowProvider>
+                  </Box>
                 </Box>
-              </Box>
-            }
-          />
+              }
+            />
+          </Route>
         </Routes>
       </Router>
     </ThemeProvider>
