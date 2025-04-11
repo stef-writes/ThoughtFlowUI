@@ -16,22 +16,16 @@ import {
   ListItemText,
   OutlinedInput,
   Menu,
-  SelectChangeEvent,
   Chip,
   Stack,
-  Autocomplete,
-  LinearProgress,
-  Collapse,
   Accordion,
   AccordionSummary,
   AccordionDetails,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SettingsIcon from '@mui/icons-material/Settings';
-import InfoIcon from '@mui/icons-material/Info';
-import ArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
-import ArrowDownwardIcon from '@mui/icons-material/ArrowDownward';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import { WorkflowNode, NodeMetadata } from '../types/workflow';
 import { useWorkflowStore } from '../store/workflowStore';
 
@@ -50,11 +44,11 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
     metadata: {
       created: node?.data.metadata?.created || new Date().toISOString(),
       lastModified: node?.data.metadata?.lastModified || new Date().toISOString(),
-      template: node?.data.metadata?.template || '',
-      inputs: node?.data.metadata?.inputs || [],
-      context: node?.data.metadata?.context || '',
-      tokenLimit: node?.data.metadata?.tokenLimit || 2000,
-      temperature: node?.data.metadata?.temperature || 0.7,
+      template: '',
+      inputs: [],
+      context: '',
+      tokenLimit: 2000,
+      temperature: 0.7,
       topP: node?.data.metadata?.topP || 1.0,
       frequencyPenalty: node?.data.metadata?.frequencyPenalty || 0.0,
       presencePenalty: node?.data.metadata?.presencePenalty || 0.0,
@@ -219,10 +213,10 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
           <Box sx={{ display: 'flex', flexDirection: 'column', gap: 1 }}>
             <Typography variant="subtitle2">System Information</Typography>
             <Typography variant="body2" color="text.secondary">
-              Created: {new Date(nodeData.metadata.created).toLocaleString()}
+              Created: {nodeData.metadata.created ? new Date(nodeData.metadata.created).toLocaleString() : 'Not set'}
             </Typography>
             <Typography variant="body2" color="text.secondary">
-              Last Modified: {new Date(nodeData.metadata.lastModified).toLocaleString()}
+              Last Modified: {nodeData.metadata.lastModified ? new Date(nodeData.metadata.lastModified).toLocaleString() : 'Not set'}
             </Typography>
             <Typography variant="body2" color="text.secondary">
               Version: {nodeData.metadata.version}
@@ -233,7 +227,7 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
 
       <DialogContent dividers>
         <Box display="flex" flexDirection="column" gap={3} py={2}>
-          {/* Model Select */}
+          {/* Smart Config */}
           <Accordion 
             elevation={0}
             defaultExpanded
@@ -249,171 +243,146 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
                 '& .MuiAccordionSummary-content': { my: 0 }
               }}
             >
-              <Typography variant="subtitle2">Model Select</Typography>
+              <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                <LightbulbIcon fontSize="small" color="primary" />
+                <Typography variant="subtitle2">Smart Config</Typography>
+              </Box>
             </AccordionSummary>
             <AccordionDetails>
-              <Stack spacing={2}>
-                <Box sx={{ display: 'flex', gap: 2 }}>
-                  <FormControl size="small" sx={{ minWidth: 200 }}>
-                    <InputLabel>Model</InputLabel>
-                    <Select
-                      value={nodeData.metadata.model}
+              <Stack spacing={3}>
+                {/* Model Selection */}
+                <Box>
+                  <Typography variant="subtitle2" gutterBottom>Model Selection</Typography>
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    <FormControl size="small" sx={{ minWidth: 200 }}>
+                      <InputLabel>Model</InputLabel>
+                      <Select
+                        value={nodeData.metadata.model}
+                        onChange={(e) => setNodeData({
+                          ...nodeData,
+                          metadata: { ...nodeData.metadata, model: e.target.value }
+                        })}
+                        label="Model"
+                      >
+                        <MenuItem value="gpt-4">GPT-4</MenuItem>
+                        <MenuItem value="gpt-3.5-turbo">GPT-3.5 Turbo</MenuItem>
+                        <MenuItem value="claude-2">Claude 2</MenuItem>
+                        <MenuItem value="claude-3">Claude 3</MenuItem>
+                      </Select>
+                    </FormControl>
+
+                    <TextField
+                      label="Token Limit"
+                      type="number"
+                      value={nodeData.metadata.tokenLimit}
                       onChange={(e) => setNodeData({
                         ...nodeData,
-                        metadata: { ...nodeData.metadata, model: e.target.value }
+                        metadata: { ...nodeData.metadata, tokenLimit: parseInt(e.target.value) }
                       })}
-                      label="Model"
-                    >
-                      <MenuItem value="gpt-4">GPT-4</MenuItem>
-                      <MenuItem value="gpt-3.5-turbo">GPT-3.5 Turbo</MenuItem>
-                      <MenuItem value="claude-2">Claude 2</MenuItem>
-                      <MenuItem value="claude-3">Claude 3</MenuItem>
-                    </Select>
-                  </FormControl>
-
-                  <TextField
-                    label="Token Limit"
-                    type="number"
-                    value={nodeData.metadata.tokenLimit}
-                    onChange={(e) => setNodeData({
-                      ...nodeData,
-                      metadata: { ...nodeData.metadata, tokenLimit: parseInt(e.target.value) }
-                    })}
-                    size="small"
-                    sx={{ width: '150px' }}
-                  />
-                </Box>
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
-
-          {/* Model Config */}
-          <Accordion 
-            elevation={0}
-            sx={{ 
-              border: '1px solid rgba(0, 0, 0, 0.12)',
-              '&:before': { display: 'none' }
-            }}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              sx={{ 
-                bgcolor: 'action.hover',
-                '& .MuiAccordionSummary-content': { my: 0 }
-              }}
-            >
-              <Typography variant="subtitle2">Model Config</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Stack spacing={2}>
-                <TextField
-                  label="System Message"
-                  value={nodeData.metadata.template}
-                  onChange={(e) => setNodeData({
-                    ...nodeData,
-                    metadata: { ...nodeData.metadata, template: e.target.value }
-                  })}
-                  multiline
-                  rows={2}
-                  size="small"
-                  fullWidth
-                  helperText="The system message that guides the LLM's behavior"
-                />
-
-                <TextField
-                  label="Output Instructions"
-                  value={nodeData.metadata.context}
-                  onChange={(e) => setNodeData({
-                    ...nodeData,
-                    metadata: { ...nodeData.metadata, context: e.target.value }
-                  })}
-                  multiline
-                  rows={2}
-                  size="small"
-                  fullWidth
-                  helperText="Instructions for how the LLM should format its output"
-                />
-              </Stack>
-            </AccordionDetails>
-          </Accordion>
-
-          {/* Advanced Settings */}
-          <Accordion 
-            elevation={0}
-            sx={{ 
-              border: '1px solid rgba(0, 0, 0, 0.12)',
-              '&:before': { display: 'none' }
-            }}
-          >
-            <AccordionSummary
-              expandIcon={<ExpandMoreIcon />}
-              sx={{ 
-                bgcolor: 'action.hover',
-                '& .MuiAccordionSummary-content': { my: 0 }
-              }}
-            >
-              <Typography variant="subtitle2">Advanced Settings</Typography>
-            </AccordionSummary>
-            <AccordionDetails>
-              <Stack spacing={2}>
-                <Box sx={{ display: 'flex', gap: 2 }}>
-                  <TextField
-                    label="Temperature"
-                    type="number"
-                    value={nodeData.metadata.temperature}
-                    onChange={(e) => setNodeData({
-                      ...nodeData,
-                      metadata: { ...nodeData.metadata, temperature: parseFloat(e.target.value) }
-                    })}
-                    size="small"
-                    sx={{ width: '150px' }}
-                    inputProps={{ step: 0.1, min: 0, max: 2 }}
-                    helperText="Controls randomness (0-2)"
-                  />
-
-                  <TextField
-                    label="Top P"
-                    type="number"
-                    value={nodeData.metadata.topP}
-                    onChange={(e) => setNodeData({
-                      ...nodeData,
-                      metadata: { ...nodeData.metadata, topP: parseFloat(e.target.value) }
-                    })}
-                    size="small"
-                    sx={{ width: '150px' }}
-                    inputProps={{ step: 0.1, min: 0, max: 1 }}
-                    helperText="Controls diversity (0-1)"
-                  />
+                      size="small"
+                      sx={{ width: '150px' }}
+                    />
+                  </Box>
                 </Box>
 
-                <Box sx={{ display: 'flex', gap: 2 }}>
-                  <TextField
-                    label="Frequency Penalty"
-                    type="number"
-                    value={nodeData.metadata.frequencyPenalty}
-                    onChange={(e) => setNodeData({
-                      ...nodeData,
-                      metadata: { ...nodeData.metadata, frequencyPenalty: parseFloat(e.target.value) }
-                    })}
-                    size="small"
-                    sx={{ width: '150px' }}
-                    inputProps={{ step: 0.1, min: -2, max: 2 }}
-                    helperText="Controls repetition (-2 to 2)"
-                  />
+                {/* Model Configuration */}
+                <Box>
+                  <Typography variant="subtitle2" gutterBottom>Model Configuration</Typography>
+                  <Stack spacing={2}>
+                    <TextField
+                      label="System Message"
+                      value={nodeData.metadata.template}
+                      onChange={(e) => setNodeData({
+                        ...nodeData,
+                        metadata: { ...nodeData.metadata, template: e.target.value }
+                      })}
+                      multiline
+                      rows={2}
+                      size="small"
+                      fullWidth
+                      helperText="The system message that guides the LLM's behavior"
+                    />
 
-                  <TextField
-                    label="Presence Penalty"
-                    type="number"
-                    value={nodeData.metadata.presencePenalty}
-                    onChange={(e) => setNodeData({
-                      ...nodeData,
-                      metadata: { ...nodeData.metadata, presencePenalty: parseFloat(e.target.value) }
-                    })}
-                    size="small"
-                    sx={{ width: '150px' }}
-                    inputProps={{ step: 0.1, min: -2, max: 2 }}
-                    helperText="Controls topic diversity (-2 to 2)"
-                  />
+                    <TextField
+                      label="Output Instructions"
+                      value={nodeData.metadata.context}
+                      onChange={(e) => setNodeData({
+                        ...nodeData,
+                        metadata: { ...nodeData.metadata, context: e.target.value }
+                      })}
+                      multiline
+                      rows={2}
+                      size="small"
+                      fullWidth
+                      helperText="Instructions for how the LLM should format its output"
+                    />
+                  </Stack>
+                </Box>
+
+                {/* Advanced Settings */}
+                <Box>
+                  <Typography variant="subtitle2" gutterBottom>Advanced Settings</Typography>
+                  <Stack spacing={2}>
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                      <TextField
+                        label="Temperature"
+                        type="number"
+                        value={nodeData.metadata.temperature}
+                        onChange={(e) => setNodeData({
+                          ...nodeData,
+                          metadata: { ...nodeData.metadata, temperature: parseFloat(e.target.value) }
+                        })}
+                        size="small"
+                        sx={{ width: '150px' }}
+                        inputProps={{ step: 0.1, min: 0, max: 2 }}
+                        helperText="Controls randomness (0-2)"
+                      />
+
+                      <TextField
+                        label="Top P"
+                        type="number"
+                        value={nodeData.metadata.topP}
+                        onChange={(e) => setNodeData({
+                          ...nodeData,
+                          metadata: { ...nodeData.metadata, topP: parseFloat(e.target.value) }
+                        })}
+                        size="small"
+                        sx={{ width: '150px' }}
+                        inputProps={{ step: 0.1, min: 0, max: 1 }}
+                        helperText="Controls diversity (0-1)"
+                      />
+                    </Box>
+
+                    <Box sx={{ display: 'flex', gap: 2 }}>
+                      <TextField
+                        label="Frequency Penalty"
+                        type="number"
+                        value={nodeData.metadata.frequencyPenalty}
+                        onChange={(e) => setNodeData({
+                          ...nodeData,
+                          metadata: { ...nodeData.metadata, frequencyPenalty: parseFloat(e.target.value) }
+                        })}
+                        size="small"
+                        sx={{ width: '150px' }}
+                        inputProps={{ step: 0.1, min: -2, max: 2 }}
+                        helperText="Controls repetition (-2 to 2)"
+                      />
+
+                      <TextField
+                        label="Presence Penalty"
+                        type="number"
+                        value={nodeData.metadata.presencePenalty}
+                        onChange={(e) => setNodeData({
+                          ...nodeData,
+                          metadata: { ...nodeData.metadata, presencePenalty: parseFloat(e.target.value) }
+                        })}
+                        size="small"
+                        sx={{ width: '150px' }}
+                        inputProps={{ step: 0.1, min: -2, max: 2 }}
+                        helperText="Controls topic diversity (-2 to 2)"
+                      />
+                    </Box>
+                  </Stack>
                 </Box>
               </Stack>
             </AccordionDetails>

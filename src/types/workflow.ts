@@ -14,6 +14,17 @@ export interface NodeMetadata {
   dependencies?: string[];
   notes?: string;
   customFields?: Record<string, any>;
+  // LLM Configuration
+  template?: string;
+  inputs?: string[];
+  context?: string;
+  tokenLimit?: number;
+  temperature?: number;
+  topP?: number;
+  frequencyPenalty?: number;
+  presencePenalty?: number;
+  model?: string;
+  additionalInput?: string;
 }
 
 export interface WorkflowNode {
