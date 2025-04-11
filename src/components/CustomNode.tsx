@@ -30,12 +30,13 @@ const CustomNode: React.FC<CustomNodeProps> = ({ data, selected, id, onNodeDoubl
       sx={{
         padding: 2,
         minWidth: 200,
-        backgroundColor: '#ffffff',
-        border: selected ? '2px solid #1976d2' : '1px solid #e0e0e0',
+        backgroundColor: '#1A1A1A',
+        border: selected ? '2px solid #C4A052' : '1px solid rgba(255, 255, 255, 0.08)',
         borderRadius: 2,
         transition: 'all 0.2s ease-in-out',
         '&:hover': {
-          boxShadow: 4,
+          boxShadow: '0 4px 20px rgba(196, 160, 82, 0.15)',
+          borderColor: 'rgba(196, 160, 82, 0.5)',
         },
         cursor: 'pointer',
       }}
@@ -44,19 +45,42 @@ const CustomNode: React.FC<CustomNodeProps> = ({ data, selected, id, onNodeDoubl
       <Handle
         type="target"
         position={Position.Top}
-        style={{ background: '#555' }}
+        style={{ background: '#C4A052', width: 8, height: 8 }}
       />
       
       <Box>
         <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
-          <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+          <Typography variant="subtitle1" sx={{ 
+            fontWeight: 500,
+            color: '#FFFFFF',
+          }}>
             {data.label}
           </Typography>
           <Box sx={{ display: 'flex', gap: 0.5 }}>
-            <IconButton size="small" sx={{ p: 0.5 }}>
+            <IconButton 
+              size="small" 
+              sx={{ 
+                p: 0.5,
+                color: 'rgba(255, 255, 255, 0.5)',
+                '&:hover': {
+                  color: '#C4A052',
+                  backgroundColor: 'rgba(196, 160, 82, 0.08)',
+                }
+              }}
+            >
               <InfoIcon fontSize="small" />
             </IconButton>
-            <IconButton size="small" sx={{ p: 0.5 }}>
+            <IconButton 
+              size="small" 
+              sx={{ 
+                p: 0.5,
+                color: 'rgba(255, 255, 255, 0.5)',
+                '&:hover': {
+                  color: '#C4A052',
+                  backgroundColor: 'rgba(196, 160, 82, 0.08)',
+                }
+              }}
+            >
               <SettingsIcon fontSize="small" />
             </IconButton>
           </Box>
@@ -65,9 +89,9 @@ const CustomNode: React.FC<CustomNodeProps> = ({ data, selected, id, onNodeDoubl
         {data.content && (
           <Typography 
             variant="body2" 
-            color="text.secondary"
             sx={{ 
               mb: 1,
+              color: 'rgba(255, 255, 255, 0.7)',
               display: '-webkit-box',
               WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
@@ -86,10 +110,11 @@ const CustomNode: React.FC<CustomNodeProps> = ({ data, selected, id, onNodeDoubl
                 key={sourceId}
                 label={`← ${getSourceNodeName(sourceId)}`}
                 size="small"
-                color="primary" 
-                variant="outlined"
                 sx={{
                   maxWidth: '100%',
+                  backgroundColor: 'rgba(196, 160, 82, 0.08)',
+                  color: '#C4A052',
+                  border: '1px solid rgba(196, 160, 82, 0.3)',
                   '& .MuiChip-label': {
                     whiteSpace: 'normal',
                     overflow: 'visible',
@@ -104,7 +129,7 @@ const CustomNode: React.FC<CustomNodeProps> = ({ data, selected, id, onNodeDoubl
       <Handle
         type="source"
         position={Position.Bottom}
-        style={{ background: '#555' }}
+        style={{ background: '#C4A052', width: 8, height: 8 }}
       />
     </Paper>
   );

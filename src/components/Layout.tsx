@@ -24,14 +24,16 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         position="static" 
         elevation={0}
         sx={{ 
-          backgroundColor: 'transparent',
+          backgroundColor: '#1A1A1A',
+          backgroundImage: 'none',
           borderBottom: `1px solid ${theme.palette.divider}`,
-          backdropFilter: 'blur(8px)',
         }}
       >
         <Toolbar sx={{ 
           justifyContent: 'space-between',
           padding: theme.spacing(2, 3),
+          backgroundColor: '#1A1A1A',
+          backdropFilter: 'none',
         }}>
           <motion.div
             initial={{ opacity: 0, x: -20 }}
@@ -44,12 +46,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
               sx={{ 
                 fontWeight: 700,
                 letterSpacing: '-0.025em',
-                background: `linear-gradient(45deg, ${theme.palette.primary.main}, ${theme.palette.secondary.main})`,
-                WebkitBackgroundClip: 'text',
-                WebkitTextFillColor: 'transparent',
+                color: theme.palette.primary.main,
               }}
             >
-              thoughtFLOW
+              ThoughtfulUI
             </Typography>
           </motion.div>
           <IconButton
@@ -57,7 +57,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             color="inherit"
             aria-label="menu"
             sx={{ 
-              color: theme.palette.text.primary,
+              color: theme.palette.primary.main,
               '&:hover': {
                 backgroundColor: theme.palette.action.hover,
               }

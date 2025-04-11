@@ -49,7 +49,7 @@ const Home: React.FC = () => {
               WebkitTextFillColor: 'transparent'
             }}
           >
-            ThoughtFlow UI
+            ThoughtfulUI
           </Typography>
           <Typography
             variant="h5"

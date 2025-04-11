@@ -1,7 +1,6 @@
 import React from 'react';
 import { Box, Button, Toolbar as MuiToolbar, Typography, Breadcrumbs, Link } from '@mui/material';
 import AddIcon from '@mui/icons-material/Add';
-import AutoFixHighIcon from '@mui/icons-material/AutoFixHigh';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
 import { useWorkflowStore } from '../store/workflowStore';
 import { v4 as uuidv4 } from 'uuid';
@@ -85,16 +84,6 @@ const WorkflowToolbar: React.FC = () => {
           onClick={handleAddNode}
         >
           Add Node
-        </Button>
-        <Button
-          variant="outlined"
-          startIcon={<AutoFixHighIcon />}
-          onClick={() => {
-            // NLP analysis functionality will be implemented later
-            console.log('NLP Analysis clicked');
-          }}
-        >
-          Analyze Text
         </Button>
       </Box>
     </MuiToolbar>

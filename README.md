@@ -1,4 +1,4 @@
-# ThoughtFlowUI
+# ThoughtfulUI
 
 A modern, enterprise-grade workflow editor with NLP capabilities and intuitive drag-and-drop functionality.
 

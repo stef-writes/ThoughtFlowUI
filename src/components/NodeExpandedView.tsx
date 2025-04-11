@@ -164,9 +164,9 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
         display: 'flex', 
         justifyContent: 'space-between', 
         alignItems: 'center',
-        borderBottom: '1px solid rgba(0, 0, 0, 0.12)',
-        background: 'linear-gradient(to right, #1976d2, #2196f3)',
-        color: 'white'
+        borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+        background: 'linear-gradient(to right, #B49042, #C4A052)',
+        color: '#121212'
       }}>
         <TextField
           value={nodeData.label}
@@ -174,11 +174,11 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
           placeholder="Node Name"
           variant="standard"
           sx={{ 
-            '& .MuiInputBase-root': { color: 'white' },
-            '& .MuiInput-underline:before': { borderBottomColor: 'rgba(255, 255, 255, 0.42)' },
-            '& .MuiInput-underline:hover:before': { borderBottomColor: 'rgba(255, 255, 255, 0.87)' },
-            '& .MuiInput-underline:after': { borderBottomColor: 'white' },
-            '& .MuiInputBase-input::placeholder': { color: 'rgba(255, 255, 255, 0.7)' }
+            '& .MuiInputBase-root': { color: '#121212' },
+            '& .MuiInput-underline:before': { borderBottomColor: 'rgba(0, 0, 0, 0.42)' },
+            '& .MuiInput-underline:hover:before': { borderBottomColor: 'rgba(0, 0, 0, 0.87)' },
+            '& .MuiInput-underline:after': { borderBottomColor: '#121212' },
+            '& .MuiInputBase-input::placeholder': { color: 'rgba(0, 0, 0, 0.7)' }
           }}
         />
         <Box sx={{ display: 'flex', gap: 1 }}>
@@ -186,7 +186,7 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
             <IconButton
               onClick={() => setIsZenMode(!isZenMode)}
               size="small"
-              sx={{ color: 'white' }}
+              sx={{ color: '#121212' }}
             >
               {isZenMode ? <NormalModeIcon /> : <ZenModeIcon />}
             </IconButton>
@@ -194,7 +194,7 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
           <IconButton
             onClick={(e) => setAnchorEl(e.currentTarget)}
             size="small"
-            sx={{ color: 'white' }}
+            sx={{ color: '#121212' }}
           >
             <SettingsIcon />
           </IconButton>
@@ -203,7 +203,7 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
             size="small"
             edge="end"
             aria-label="close"
-            sx={{ color: 'white' }}
+            sx={{ color: '#121212' }}
           >
             <CloseIcon />
           </IconButton>
@@ -322,9 +322,8 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
             {/* Smart Config */}
             <Accordion 
               elevation={0}
-              defaultExpanded
               sx={{ 
-                border: '1px solid rgba(0, 0, 0, 0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 '&:before': { display: 'none' }
               }}
             >
@@ -485,7 +484,7 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
               elevation={0}
               defaultExpanded={incomingConnections.length > 0}
               sx={{ 
-                border: '1px solid rgba(0, 0, 0, 0.12)',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
                 '&:before': { display: 'none' }
               }}
             >
@@ -537,6 +536,71 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
                     No incoming connections
                   </Typography>
                 )}
+              </AccordionDetails>
+            </Accordion>
+
+            {/* User Input */}
+            <Accordion 
+              elevation={0}
+              defaultExpanded
+              sx={{ 
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                '&:before': { display: 'none' }
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                sx={{ 
+                  bgcolor: 'action.hover',
+                  '& .MuiAccordionSummary-content': { my: 0 }
+                }}
+              >
+                <Typography variant="subtitle2">User Input</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <TextField
+                  value={nodeData.content}
+                  onChange={(e) => setNodeData({ ...nodeData, content: e.target.value })}
+                  multiline
+                  rows={6}
+                  fullWidth
+                  variant="outlined"
+                  placeholder="Enter your input here..."
+                />
+              </AccordionDetails>
+            </Accordion>
+
+            {/* Output */}
+            <Accordion 
+              elevation={0}
+              defaultExpanded
+              sx={{ 
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                '&:before': { display: 'none' }
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon />}
+                sx={{ 
+                  bgcolor: 'action.hover',
+                  '& .MuiAccordionSummary-content': { my: 0 }
+                }}
+              >
+                <Typography variant="subtitle2">Output</Typography>
+              </AccordionSummary>
+              <AccordionDetails>
+                <TextField
+                  value={nodeData.metadata.additionalInput}
+                  onChange={(e) => setNodeData({
+                    ...nodeData,
+                    metadata: { ...nodeData.metadata, additionalInput: e.target.value }
+                  })}
+                  multiline
+                  rows={6}
+                  fullWidth
+                  variant="outlined"
+                  placeholder="Output will appear here..."
+                />
               </AccordionDetails>
             </Accordion>
           </Box>

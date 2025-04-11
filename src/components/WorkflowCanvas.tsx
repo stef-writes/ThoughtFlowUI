@@ -16,6 +16,7 @@ import 'reactflow/dist/style.css';
 import { useWorkflowStore } from '../store/workflowStore';
 import CustomNode from './CustomNode';
 import NodeExpandedView from './NodeExpandedView';
+import { Paper } from '@mui/material';
 
 const nodeTypes: NodeTypes = {
   custom: CustomNode,
@@ -67,15 +68,18 @@ const WorkflowCanvas: React.FC = () => {
   }, []);
 
   return (
-    <div style={{ 
-      width: '100%', 
-      height: '100%',
-      position: 'absolute',
-      top: 0,
-      left: 0,
-      right: 0,
-      bottom: 0
-    }}>
+    <Paper 
+      className="workflow-canvas"
+      sx={{ 
+        width: '100%', 
+        height: '100%',
+        position: 'absolute',
+        top: 0,
+        left: 0,
+        right: 0,
+        bottom: 0,
+      }}
+    >
       <ReactFlow
         nodes={nodes}
         edges={filteredEdges}
@@ -84,24 +88,40 @@ const WorkflowCanvas: React.FC = () => {
         nodeTypes={nodeTypes}
         fitView
         style={{
-          background: '#f8f8f8'
+          backgroundColor: 'transparent'
         }}
         onNodeDoubleClick={(_, node) => handleNodeDoubleClick(node.id)}
         connectionMode={ConnectionMode.Loose}
         defaultEdgeOptions={{
           type: 'default',
-          animated: true
+          animated: true,
+          style: { stroke: '#C4A052', strokeWidth: 2 },
         }}
       >
-        <Background />
-        <Controls />
-        <MiniMap />
+        <Background 
+          color="rgba(255, 255, 255, 0.05)"
+          gap={20}
+          size={1}
+        />
+        <Controls 
+          style={{
+            backgroundColor: '#1A1A1A',
+            borderColor: 'rgba(255, 255, 255, 0.08)',
+          }}
+        />
+        <MiniMap 
+          style={{
+            backgroundColor: '#1A1A1A',
+            border: '1px solid rgba(255, 255, 255, 0.08)',
+          }}
+          maskColor="rgba(0, 0, 0, 0.7)"
+        />
       </ReactFlow>
       <NodeExpandedView
         node={expandedNode}
         onClose={handleCloseExpandedView}
       />
-    </div>
+    </Paper>
   );
 };
 
