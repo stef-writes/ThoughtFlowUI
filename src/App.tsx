@@ -9,6 +9,7 @@ import GlobalDashboard from './features/global/GlobalDashboard';
 import ProjectView from './features/projects/ProjectView';
 import WorkflowCanvas from './components/WorkflowCanvas';
 import WorkflowToolbar from './components/WorkflowToolbar';
+import AIFloatingAssistant from './components/AIFloatingAssistant';
 
 const App: React.FC = () => {
   return (
@@ -48,6 +49,7 @@ const App: React.FC = () => {
               />
             </Routes>
           </Layout>
+          <AIFloatingAssistant />
         </ReactFlowProvider>
       </Router>
     </ThemeProvider>

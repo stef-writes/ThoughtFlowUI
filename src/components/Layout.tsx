@@ -3,6 +3,8 @@ import { Box, AppBar, Toolbar, Typography, IconButton, useTheme } from '@mui/mat
 import MenuIcon from '@mui/icons-material/Menu';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
+import TerminalPanel from './TerminalPanel';
+import SidePanel from './SidePanel';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -12,6 +14,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const theme = useTheme();
   const location = useLocation();
   const isWorkflowEditor = location.pathname.includes('/workflows/');
+  const isProjectView = location.pathname.includes('/projects/');
 
   return (
     <Box sx={{ 
@@ -71,6 +74,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         component="main" 
         sx={{ 
           flexGrow: 1,
+          position: 'relative',
           ...(isWorkflowEditor ? {
             padding: 0,
             maxWidth: '100%',
@@ -93,6 +97,18 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           {children}
         </motion.div>
       </Box>
+      
+      {/* Terminal Panel based on route */}
+      {isWorkflowEditor ? (
+        <TerminalPanel title="Workflow Terminal" />
+      ) : isProjectView ? (
+        <TerminalPanel title="Project Terminal" />
+      ) : (
+        <TerminalPanel title="Global Terminal" />
+      )}
+
+      {/* Side Panel */}
+      <SidePanel />
     </Box>
   );
 };
