@@ -1,8 +1,20 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, IconButton, Paper } from '@mui/material';
+import { Box, IconButton, Paper, Typography, Tooltip } from '@mui/material';
 import ChevronLeftIcon from '@mui/icons-material/ChevronLeft';
 import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import { styled, alpha } from '@mui/material/styles';
+import ReactFlow, { 
+  Background, 
+  Controls, 
+  useNodesState, 
+  useEdgesState,
+  Node,
+  Edge,
+  NodeTypes,
+  ConnectionMode,
+} from 'reactflow';
+import 'reactflow/dist/style.css';
+import SystemView from './SystemView';
 
 const Panel = styled(Paper)(({ theme }) => ({
   position: 'fixed',
@@ -22,7 +34,7 @@ const Header = styled(Box)(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
   alignItems: 'center',
-  justifyContent: 'center',
+  justifyContent: 'space-between',
   padding: theme.spacing(0.75),
   width: '40px',
   height: '100%',
@@ -59,10 +71,95 @@ const Header = styled(Box)(({ theme }) => ({
   }
 }));
 
+const Title = styled(Typography)(({ theme }) => ({
+  writingMode: 'vertical-rl',
+  transform: 'rotate(180deg)',
+  color: alpha(theme.palette.common.white, 0.9),
+  fontSize: '0.75rem',
+  fontWeight: 500,
+  letterSpacing: '0.02em',
+  margin: theme.spacing(1, 0),
+}));
+
 const Content = styled(Box)({
   flexGrow: 1,
-  overflow: 'auto',
+  overflow: 'hidden',
+  display: 'flex',
+  flexDirection: 'column',
 });
+
+const NetworkView = styled(Box)(({ theme }) => ({
+  width: '100%',
+  height: '100%',
+  backgroundColor: 'transparent',
+  '& .react-flow__node': {
+    background: 'none',
+    border: 'none',
+    '&:hover': {
+      boxShadow: 'none',
+    },
+    '&.selected': {
+      boxShadow: 'none',
+    }
+  },
+  '& .react-flow__edge': {
+    stroke: alpha('#C4A052', 0.4),
+    strokeWidth: 1,
+  },
+  '& .react-flow__edge.animated': {
+    stroke: alpha('#C4A052', 0.6),
+  },
+  '& .react-flow__controls': {
+    backgroundColor: theme.palette.grey[800],
+    border: `1px solid ${alpha(theme.palette.grey[700], 0.3)}`,
+  }
+}));
+
+const Description = styled(Box)(({ theme }) => ({
+  padding: theme.spacing(2),
+  borderBottom: `1px solid ${alpha(theme.palette.grey[700], 0.3)}`,
+  '& .title': {
+    fontSize: '0.75rem',
+    color: alpha(theme.palette.common.white, 0.7),
+    marginBottom: theme.spacing(1),
+  },
+  '& .text': {
+    fontSize: '0.8rem',
+    color: theme.palette.common.white,
+    lineHeight: 1.4,
+  },
+}));
+
+const SystemNode: React.FC<{ data: { label: string; type: string; metadata?: any } }> = ({ data }) => {
+  return (
+    <Tooltip 
+      title={
+        <Box sx={{ p: 1 }}>
+          <Typography variant="subtitle2" gutterBottom>Type: {data.type}</Typography>
+          {data.metadata && Object.entries(data.metadata).map(([key, value]) => (
+            <Typography key={key} variant="body2">
+              {key}: {String(value)}
+            </Typography>
+          ))}
+        </Box>
+      }
+      arrow
+      placement="right"
+    >
+      <Box>
+        <Typography variant="body2" sx={{ 
+          color: 'common.white',
+          overflow: 'hidden',
+          textOverflow: 'ellipsis',
+          whiteSpace: 'nowrap',
+          maxWidth: '150px'
+        }}>
+          {data.label}
+        </Typography>
+      </Box>
+    </Tooltip>
+  );
+};
 
 const SidePanel: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -74,6 +171,82 @@ const SidePanel: React.FC = () => {
   const startY = useRef(0);
   const startWidth = useRef(0);
   const startHeight = useRef(0);
+  const [showLabels, setShowLabels] = useState(true);
+
+  // Example nodes and edges - this would be dynamic based on system state
+  const nodes: Node[] = [
+    {
+      id: '1',
+      type: 'viewer',
+      position: { x: 100, y: 100 },
+      data: { 
+        label: 'Project Root',
+        color: '#4CAF50',
+        opacity: 0.8,
+        metadata: {
+          Type: 'Project',
+          Status: 'Active',
+          'Last Modified': '2024-03-20',
+          'Node Count': '5',
+          Version: '1.0.0'
+        }
+      },
+      style: { width: 60, height: 60 },
+    },
+    {
+      id: '2',
+      type: 'viewer',
+      position: { x: 250, y: 50 },
+      data: { 
+        label: 'Chain A',
+        color: '#2196F3',
+        opacity: 0.7,
+        metadata: {
+          Type: 'Processing Chain',
+          Status: 'Running',
+          'Input Nodes': '2',
+          'Output Nodes': '1',
+          Performance: '98.5%'
+        }
+      },
+      style: { width: 40, height: 40 },
+    },
+    {
+      id: '3',
+      type: 'viewer',
+      position: { x: 200, y: 200 },
+      data: { 
+        label: 'Node B',
+        color: '#FFC107',
+        opacity: 0.6,
+        metadata: {
+          Type: 'Processing Node',
+          Status: 'Active',
+          'Input Type': 'Text',
+          'Output Type': 'Vector',
+          Model: 'GPT-4'
+        }
+      },
+      style: { width: 50, height: 50 },
+    },
+  ];
+
+  const edges: Edge[] = [
+    { 
+      id: 'e1-2', 
+      source: '1', 
+      target: '2',
+      type: 'default',
+      animated: true,
+    },
+    { 
+      id: 'e1-3', 
+      source: '1', 
+      target: '3',
+      type: 'default',
+      animated: false,
+    },
+  ];
 
   const handleWidthMouseDown = (e: React.MouseEvent) => {
     setIsDraggingWidth(true);
@@ -131,6 +304,7 @@ const SidePanel: React.FC = () => {
     >
       <TopDragHandle onMouseDown={handleHeightMouseDown} />
       <Header onMouseDown={handleWidthMouseDown}>
+        <Title variant="subtitle2">System View</Title>
         <IconButton 
           size="small" 
           onClick={() => setIsExpanded(!isExpanded)}
@@ -148,7 +322,41 @@ const SidePanel: React.FC = () => {
         </IconButton>
       </Header>
       <Content>
-        {/* Placeholder for future content */}
+        <Description>
+          <Typography className="title">System Overview</Typography>
+          <Typography className="text">
+            Currently viewing a project with 3 active components. The main project node (green) 
+            connects to a processing chain and an individual node. The chain is currently running 
+            with optimal performance, while Node B is handling text-to-vector transformations 
+            using GPT-4.
+          </Typography>
+        </Description>
+        <Box sx={{ 
+          display: 'flex', 
+          alignItems: 'center', 
+          justifyContent: 'flex-end',
+          px: 2,
+          py: 1,
+        }}>
+          <Typography 
+            variant="caption" 
+            sx={{ 
+              color: 'text.secondary',
+              cursor: 'pointer',
+              '&:hover': { color: 'primary.main' },
+            }}
+            onClick={() => setShowLabels(!showLabels)}
+          >
+            {showLabels ? 'Hide Labels' : 'Show Labels'}
+          </Typography>
+        </Box>
+        <Box sx={{ flexGrow: 1, position: 'relative', minHeight: 0 }}>
+          <SystemView 
+            nodes={nodes} 
+            edges={edges} 
+            showLabels={showLabels}
+          />
+        </Box>
       </Content>
     </Panel>
   );
