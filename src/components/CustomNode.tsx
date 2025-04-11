@@ -1,7 +1,9 @@
 import React, { memo } from 'react';
 import { Handle, Position, NodeProps } from 'reactflow';
-import { Paper, Typography, Box, Chip, Stack } from '@mui/material';
+import { Paper, Typography, Box, Chip, Stack, IconButton } from '@mui/material';
 import { useWorkflowStore } from '../store/workflowStore';
+import SettingsIcon from '@mui/icons-material/Settings';
+import InfoIcon from '@mui/icons-material/Info';
 
 interface CustomNodeProps extends NodeProps {
   onNodeDoubleClick?: (nodeId: string) => void;
@@ -24,16 +26,16 @@ const CustomNode: React.FC<CustomNodeProps> = ({ data, selected, id, onNodeDoubl
 
   return (
     <Paper
-      elevation={selected ? 8 : 3}
+      elevation={selected ? 4 : 2}
       sx={{
         padding: 2,
         minWidth: 200,
         backgroundColor: '#ffffff',
-        border: selected ? '2px solid #1976d2' : '1px solid #ccc',
+        border: selected ? '2px solid #1976d2' : '1px solid #e0e0e0',
         borderRadius: 2,
         transition: 'all 0.2s ease-in-out',
         '&:hover': {
-          boxShadow: 6,
+          boxShadow: 4,
         },
         cursor: 'pointer',
       }}
@@ -46,67 +48,56 @@ const CustomNode: React.FC<CustomNodeProps> = ({ data, selected, id, onNodeDoubl
       />
       
       <Box>
-        <Typography variant="h6" gutterBottom sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
-          {data.label}
-          <Box component="span" sx={{ 
-            width: 8, 
-            height: 8, 
-            borderRadius: '50%', 
-            bgcolor: 'primary.main',
-            display: 'inline-block'
-          }} />
-        </Typography>
-        
-        {data.selectedSources && data.selectedSources.length > 0 && (
-          <Box mb={1}>
-            <Stack direction="row" spacing={1} flexWrap="wrap" useFlexGap gap={1}>
-              {data.selectedSources.map((sourceId: string) => (
-                <Chip 
-                  key={sourceId}
-                  label={`From: ${getSourceNodeName(sourceId)}`}
-                  size="small"
-                  color="primary" 
-                  variant="outlined"
-                  sx={{
-                    maxWidth: '100%',
-                    '& .MuiChip-label': {
-                      whiteSpace: 'normal',
-                      overflow: 'visible',
-                    }
-                  }}
-                />
-              ))}
-            </Stack>
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 1 }}>
+          <Typography variant="subtitle1" sx={{ fontWeight: 600 }}>
+            {data.label}
+          </Typography>
+          <Box sx={{ display: 'flex', gap: 0.5 }}>
+            <IconButton size="small" sx={{ p: 0.5 }}>
+              <InfoIcon fontSize="small" />
+            </IconButton>
+            <IconButton size="small" sx={{ p: 0.5 }}>
+              <SettingsIcon fontSize="small" />
+            </IconButton>
           </Box>
-        )}
+        </Box>
         
         {data.content && (
-          <Typography variant="body2" color="text.secondary">
+          <Typography 
+            variant="body2" 
+            color="text.secondary"
+            sx={{ 
+              mb: 1,
+              display: '-webkit-box',
+              WebkitLineClamp: 2,
+              WebkitBoxOrient: 'vertical',
+              overflow: 'hidden',
+              textOverflow: 'ellipsis'
+            }}
+          >
             {data.content}
           </Typography>
         )}
         
-        {data.nlpAnalysis && (
-          <Box mt={2}>
-            <Typography variant="subtitle2" color="primary">
-              NLP Analysis:
-            </Typography>
-            {data.nlpAnalysis.sentiment && (
-              <Typography variant="body2">
-                Sentiment: {data.nlpAnalysis.sentiment}
-              </Typography>
-            )}
-            {data.nlpAnalysis.keywords && (
-              <Typography variant="body2">
-                Keywords: {data.nlpAnalysis.keywords.join(', ')}
-              </Typography>
-            )}
-            {data.nlpAnalysis.summary && (
-              <Typography variant="body2">
-                Summary: {data.nlpAnalysis.summary}
-              </Typography>
-            )}
-          </Box>
+        {data.selectedSources && data.selectedSources.length > 0 && (
+          <Stack direction="row" spacing={0.5} flexWrap="wrap" useFlexGap>
+            {data.selectedSources.map((sourceId: string) => (
+              <Chip 
+                key={sourceId}
+                label={`← ${getSourceNodeName(sourceId)}`}
+                size="small"
+                color="primary" 
+                variant="outlined"
+                sx={{
+                  maxWidth: '100%',
+                  '& .MuiChip-label': {
+                    whiteSpace: 'normal',
+                    overflow: 'visible',
+                  }
+                }}
+              />
+            ))}
+          </Stack>
         )}
       </Box>
       
