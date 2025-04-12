@@ -324,215 +324,323 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
               elevation={0}
               sx={{ 
                 border: '1px solid rgba(255, 255, 255, 0.08)',
-                '&:before': { display: 'none' }
+                '&:before': { display: 'none' },
+                '& .MuiAccordionSummary-root': {
+                  minHeight: '48px',
+                  padding: '0 16px',
+                },
+                '& .MuiAccordionDetails-root': {
+                  padding: '16px',
+                }
               }}
             >
               <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
+                expandIcon={<ExpandMoreIcon sx={{ color: 'primary.main' }} />}
                 sx={{ 
-                  bgcolor: 'action.hover',
+                  bgcolor: 'transparent',
                   '& .MuiAccordionSummary-content': { my: 0 }
                 }}
               >
                 <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
                   <LightbulbIcon fontSize="small" color="primary" />
-                  <Typography variant="subtitle2">Smart Config</Typography>
+                  <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>Smart Config</Typography>
                 </Box>
               </AccordionSummary>
               <AccordionDetails>
-                <Stack spacing={3}>
-                  {/* Model Selection */}
-                  <Box>
-                    <Typography variant="subtitle2" gutterBottom>Model Selection</Typography>
-                    <Box sx={{ display: 'flex', gap: 2 }}>
-                      <FormControl size="small" sx={{ minWidth: 200 }}>
-                        <InputLabel>Model</InputLabel>
-                        <Select
-                          value={nodeData.metadata.model}
-                          onChange={(e) => setNodeData({
-                            ...nodeData,
-                            metadata: { ...nodeData.metadata, model: e.target.value }
-                          })}
-                          label="Model"
-                        >
-                          <MenuItem value="gpt-4">GPT-4</MenuItem>
-                          <MenuItem value="gpt-3.5-turbo">GPT-3.5 Turbo</MenuItem>
-                          <MenuItem value="claude-2">Claude 2</MenuItem>
-                          <MenuItem value="claude-3">Claude 3</MenuItem>
-                        </Select>
-                      </FormControl>
-
-                      <TextField
-                        label="Token Limit"
-                        type="number"
-                        value={nodeData.metadata.tokenLimit}
+                <Stack spacing={2}>
+                  {/* Model Selection - More Compact */}
+                  <Box sx={{ display: 'flex', gap: 2, alignItems: 'center' }}>
+                    <FormControl size="small" sx={{ minWidth: 180 }}>
+                      <Select
+                        value={nodeData.metadata.model}
                         onChange={(e) => setNodeData({
                           ...nodeData,
-                          metadata: { ...nodeData.metadata, tokenLimit: parseInt(e.target.value) }
+                          metadata: { ...nodeData.metadata, model: e.target.value }
+                        })}
+                        sx={{ 
+                          '& .MuiSelect-select': { py: 1 },
+                          '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.12)' }
+                        }}
+                      >
+                        <MenuItem value="gpt-4">GPT-4</MenuItem>
+                        <MenuItem value="gpt-3.5-turbo">GPT-3.5 Turbo</MenuItem>
+                        <MenuItem value="claude-2">Claude 2</MenuItem>
+                        <MenuItem value="claude-3">Claude 3</MenuItem>
+                      </Select>
+                    </FormControl>
+
+                    <TextField
+                      type="number"
+                      value={nodeData.metadata.tokenLimit}
+                      onChange={(e) => setNodeData({
+                        ...nodeData,
+                        metadata: { ...nodeData.metadata, tokenLimit: parseInt(e.target.value) }
+                      })}
+                      size="small"
+                      sx={{ 
+                        width: '120px',
+                        '& .MuiOutlinedInput-root': { py: 1 },
+                        '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.12)' }
+                      }}
+                      placeholder="Token Limit"
+                    />
+                  </Box>
+
+                  {/* Model Configuration - Simplified */}
+                  <Box sx={{ display: 'flex', gap: 2 }}>
+                    <TextField
+                      value={nodeData.metadata.template}
+                      onChange={(e) => setNodeData({
+                        ...nodeData,
+                        metadata: { ...nodeData.metadata, template: e.target.value }
+                      })}
+                      multiline
+                      rows={1}
+                      size="small"
+                      fullWidth
+                      placeholder="System Message"
+                      sx={{ 
+                        '& .MuiOutlinedInput-root': { py: 1 },
+                        '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.12)' }
+                      }}
+                    />
+
+                    <TextField
+                      value={nodeData.metadata.context}
+                      onChange={(e) => setNodeData({
+                        ...nodeData,
+                        metadata: { ...nodeData.metadata, context: e.target.value }
+                      })}
+                      multiline
+                      rows={1}
+                      size="small"
+                      fullWidth
+                      placeholder="Output Instructions"
+                      sx={{ 
+                        '& .MuiOutlinedInput-root': { py: 1 },
+                        '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.12)' }
+                      }}
+                    />
+                  </Box>
+
+                  {/* Advanced Settings - More Compact */}
+                  <Box sx={{ 
+                    display: 'flex', 
+                    gap: 3,
+                    flexWrap: 'wrap',
+                    '& > *': {
+                      flex: '1 1 200px',
+                      minWidth: '200px'
+                    }
+                  }}>
+                    <Box sx={{ position: 'relative' }}>
+                      <Typography 
+                        variant="caption" 
+                        sx={{ 
+                          position: 'absolute',
+                          top: -20,
+                          left: 0,
+                          color: 'text.secondary',
+                          fontSize: '0.75rem',
+                          mb: 1
+                        }}
+                      >
+                        Temperature
+                      </Typography>
+                      <TextField
+                        type="number"
+                        value={nodeData.metadata.temperature}
+                        onChange={(e) => setNodeData({
+                          ...nodeData,
+                          metadata: { ...nodeData.metadata, temperature: parseFloat(e.target.value) }
                         })}
                         size="small"
-                        sx={{ width: '150px' }}
+                        sx={{ 
+                          width: '100%',
+                          '& .MuiOutlinedInput-root': { py: 1 },
+                          '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.12)' }
+                        }}
+                        placeholder="0.7"
                       />
                     </Box>
-                  </Box>
 
-                  {/* Model Configuration */}
-                  <Box>
-                    <Typography variant="subtitle2" gutterBottom>Model Configuration</Typography>
-                    <Stack spacing={2}>
+                    <Box sx={{ position: 'relative' }}>
+                      <Typography 
+                        variant="caption" 
+                        sx={{ 
+                          position: 'absolute',
+                          top: -20,
+                          left: 0,
+                          color: 'text.secondary',
+                          fontSize: '0.75rem',
+                          mb: 1
+                        }}
+                      >
+                        Top P
+                      </Typography>
                       <TextField
-                        label="System Message"
-                        value={nodeData.metadata.template}
+                        type="number"
+                        value={nodeData.metadata.topP}
                         onChange={(e) => setNodeData({
                           ...nodeData,
-                          metadata: { ...nodeData.metadata, template: e.target.value }
+                          metadata: { ...nodeData.metadata, topP: parseFloat(e.target.value) }
                         })}
-                        multiline
-                        rows={2}
                         size="small"
-                        fullWidth
-                        helperText="The system message that guides the LLM's behavior"
+                        sx={{ 
+                          width: '100%',
+                          '& .MuiOutlinedInput-root': { py: 1 },
+                          '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.12)' }
+                        }}
+                        placeholder="1.0"
                       />
+                    </Box>
 
+                    <Box sx={{ position: 'relative' }}>
+                      <Typography 
+                        variant="caption" 
+                        sx={{ 
+                          position: 'absolute',
+                          top: -20,
+                          left: 0,
+                          color: 'text.secondary',
+                          fontSize: '0.75rem',
+                          mb: 1
+                        }}
+                      >
+                        Freq Penalty
+                      </Typography>
                       <TextField
-                        label="Output Instructions"
-                        value={nodeData.metadata.context}
+                        type="number"
+                        value={nodeData.metadata.frequencyPenalty}
                         onChange={(e) => setNodeData({
                           ...nodeData,
-                          metadata: { ...nodeData.metadata, context: e.target.value }
+                          metadata: { ...nodeData.metadata, frequencyPenalty: parseFloat(e.target.value) }
                         })}
-                        multiline
-                        rows={2}
                         size="small"
-                        fullWidth
-                        helperText="Instructions for how the LLM should format its output"
+                        sx={{ 
+                          width: '100%',
+                          '& .MuiOutlinedInput-root': { py: 1 },
+                          '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.12)' }
+                        }}
+                        placeholder="0.0"
                       />
-                    </Stack>
-                  </Box>
+                    </Box>
 
-                  {/* Advanced Settings */}
-                  <Box>
-                    <Typography variant="subtitle2" gutterBottom>Advanced Settings</Typography>
-                    <Stack spacing={2}>
-                      <Box sx={{ display: 'flex', gap: 2 }}>
-                        <TextField
-                          label="Temperature"
-                          type="number"
-                          value={nodeData.metadata.temperature}
-                          onChange={(e) => setNodeData({
-                            ...nodeData,
-                            metadata: { ...nodeData.metadata, temperature: parseFloat(e.target.value) }
-                          })}
-                          size="small"
-                          sx={{ width: '150px' }}
-                          inputProps={{ step: 0.1, min: 0, max: 2 }}
-                          helperText="Controls randomness (0-2)"
-                        />
-
-                        <TextField
-                          label="Top P"
-                          type="number"
-                          value={nodeData.metadata.topP}
-                          onChange={(e) => setNodeData({
-                            ...nodeData,
-                            metadata: { ...nodeData.metadata, topP: parseFloat(e.target.value) }
-                          })}
-                          size="small"
-                          sx={{ width: '150px' }}
-                          inputProps={{ step: 0.1, min: 0, max: 1 }}
-                          helperText="Controls diversity (0-1)"
-                        />
-                      </Box>
-
-                      <Box sx={{ display: 'flex', gap: 2 }}>
-                        <TextField
-                          label="Frequency Penalty"
-                          type="number"
-                          value={nodeData.metadata.frequencyPenalty}
-                          onChange={(e) => setNodeData({
-                            ...nodeData,
-                            metadata: { ...nodeData.metadata, frequencyPenalty: parseFloat(e.target.value) }
-                          })}
-                          size="small"
-                          sx={{ width: '150px' }}
-                          inputProps={{ step: 0.1, min: -2, max: 2 }}
-                          helperText="Controls repetition (-2 to 2)"
-                        />
-
-                        <TextField
-                          label="Presence Penalty"
-                          type="number"
-                          value={nodeData.metadata.presencePenalty}
-                          onChange={(e) => setNodeData({
-                            ...nodeData,
-                            metadata: { ...nodeData.metadata, presencePenalty: parseFloat(e.target.value) }
-                          })}
-                          size="small"
-                          sx={{ width: '150px' }}
-                          inputProps={{ step: 0.1, min: -2, max: 2 }}
-                          helperText="Controls topic diversity (-2 to 2)"
-                        />
-                      </Box>
-                    </Stack>
+                    <Box sx={{ position: 'relative' }}>
+                      <Typography 
+                        variant="caption" 
+                        sx={{ 
+                          position: 'absolute',
+                          top: -20,
+                          left: 0,
+                          color: 'text.secondary',
+                          fontSize: '0.75rem',
+                          mb: 1
+                        }}
+                      >
+                        Presence Penalty
+                      </Typography>
+                      <TextField
+                        type="number"
+                        value={nodeData.metadata.presencePenalty}
+                        onChange={(e) => setNodeData({
+                          ...nodeData,
+                          metadata: { ...nodeData.metadata, presencePenalty: parseFloat(e.target.value) }
+                        })}
+                        size="small"
+                        sx={{ 
+                          width: '100%',
+                          '& .MuiOutlinedInput-root': { py: 1 },
+                          '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.12)' }
+                        }}
+                        placeholder="0.0"
+                      />
+                    </Box>
                   </Box>
                 </Stack>
               </AccordionDetails>
             </Accordion>
 
-            {/* Connections */}
+            {/* Connections - More Minimalist */}
             <Accordion 
               elevation={0}
               defaultExpanded={incomingConnections.length > 0}
               sx={{ 
                 border: '1px solid rgba(255, 255, 255, 0.08)',
-                '&:before': { display: 'none' }
+                '&:before': { display: 'none' },
+                '& .MuiAccordionSummary-root': {
+                  minHeight: '48px',
+                  padding: '0 16px',
+                },
+                '& .MuiAccordionDetails-root': {
+                  padding: '16px',
+                }
               }}
             >
               <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
+                expandIcon={<ExpandMoreIcon sx={{ color: 'primary.main' }} />}
                 sx={{ 
-                  bgcolor: 'action.hover',
+                  bgcolor: 'transparent',
                   '& .MuiAccordionSummary-content': { my: 0 }
                 }}
               >
-                <Typography variant="subtitle2">Connections</Typography>
+                <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>Connections</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 {incomingConnections.length > 0 ? (
-                  <Stack spacing={2}>
-                    <FormControl fullWidth>
-                      <InputLabel>Active Connections</InputLabel>
-                      <Select
-                        multiple
-                        value={nodeData.selectedSources}
-                        onChange={(e) => setNodeData({
-                          ...nodeData,
-                          selectedSources: e.target.value as string[]
-                        })}
-                        input={<OutlinedInput label="Active Connections" />}
-                        renderValue={(selected) => (
-                          <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
-                            {selected.map((value) => (
-                              <Chip 
-                                key={value} 
-                                label={sourceNodes.find(n => n.id === value)?.label || value}
-                                size="small"
-                              />
-                            ))}
-                          </Box>
-                        )}
-                      >
-                        {sourceNodes.map((source) => (
-                          <MenuItem key={source.id} value={source.id}>
-                            <Checkbox checked={nodeData.selectedSources.indexOf(source.id) > -1} />
-                            <ListItemText primary={source.label} />
-                          </MenuItem>
-                        ))}
-                      </Select>
-                    </FormControl>
-                  </Stack>
+                  <FormControl fullWidth>
+                    <Select
+                      multiple
+                      value={nodeData.selectedSources}
+                      onChange={(e) => setNodeData({
+                        ...nodeData,
+                        selectedSources: e.target.value as string[]
+                      })}
+                      sx={{ 
+                        '& .MuiSelect-select': { py: 1 },
+                        '& .MuiOutlinedInput-notchedOutline': { borderColor: 'rgba(255, 255, 255, 0.12)' }
+                      }}
+                      renderValue={(selected) => (
+                        <Box sx={{ display: 'flex', flexWrap: 'wrap', gap: 0.5 }}>
+                          {selected.map((value) => (
+                            <Chip 
+                              key={value} 
+                              label={sourceNodes.find(n => n.id === value)?.label || value}
+                              size="small"
+                              sx={{ 
+                                bgcolor: 'primary.main',
+                                color: 'common.white',
+                                '& .MuiChip-deleteIcon': { color: 'common.white' }
+                              }}
+                            />
+                          ))}
+                        </Box>
+                      )}
+                    >
+                      {sourceNodes.map((source) => (
+                        <MenuItem key={source.id} value={source.id}>
+                          <Checkbox 
+                            checked={nodeData.selectedSources.indexOf(source.id) > -1}
+                            sx={{ 
+                              color: 'primary.main',
+                              '&.Mui-checked': { color: 'primary.main' }
+                            }}
+                          />
+                          <ListItemText 
+                            primary={source.label}
+                            sx={{ 
+                              '& .MuiTypography-root': { 
+                                fontSize: '0.875rem',
+                                color: 'text.primary'
+                              }
+                            }}
+                          />
+                        </MenuItem>
+                      ))}
+                    </Select>
+                  </FormControl>
                 ) : (
-                  <Typography variant="body2" color="text.secondary">
+                  <Typography variant="body2" sx={{ color: 'text.secondary' }}>
                     No incoming connections
                   </Typography>
                 )}
@@ -545,27 +653,51 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
               defaultExpanded
               sx={{ 
                 border: '1px solid rgba(255, 255, 255, 0.08)',
-                '&:before': { display: 'none' }
+                '&:before': { display: 'none' },
+                '& .MuiAccordionSummary-root': {
+                  minHeight: '48px',
+                  padding: '0 16px',
+                },
+                '& .MuiAccordionDetails-root': {
+                  padding: '16px',
+                }
               }}
             >
               <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
+                expandIcon={<ExpandMoreIcon sx={{ color: 'primary.main' }} />}
                 sx={{ 
-                  bgcolor: 'action.hover',
+                  bgcolor: 'transparent',
                   '& .MuiAccordionSummary-content': { my: 0 }
                 }}
               >
-                <Typography variant="subtitle2">User Input</Typography>
+                <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>User Input</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <TextField
                   value={nodeData.content}
                   onChange={(e) => setNodeData({ ...nodeData, content: e.target.value })}
                   multiline
-                  rows={6}
+                  rows={4}
                   fullWidth
                   variant="outlined"
                   placeholder="Enter your input here..."
+                  sx={{ 
+                    '& .MuiOutlinedInput-root': { 
+                      py: 1,
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'rgba(255, 255, 255, 0.2)'
+                      }
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': { 
+                      borderColor: 'rgba(255, 255, 255, 0.12)',
+                      transition: 'border-color 0.2s ease-in-out'
+                    },
+                    '& .MuiOutlinedInput-input': {
+                      color: 'text.primary',
+                      fontSize: '0.875rem',
+                      lineHeight: 1.5
+                    }
+                  }}
                 />
               </AccordionDetails>
             </Accordion>
@@ -576,17 +708,24 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
               defaultExpanded
               sx={{ 
                 border: '1px solid rgba(255, 255, 255, 0.08)',
-                '&:before': { display: 'none' }
+                '&:before': { display: 'none' },
+                '& .MuiAccordionSummary-root': {
+                  minHeight: '48px',
+                  padding: '0 16px',
+                },
+                '& .MuiAccordionDetails-root': {
+                  padding: '16px',
+                }
               }}
             >
               <AccordionSummary
-                expandIcon={<ExpandMoreIcon />}
+                expandIcon={<ExpandMoreIcon sx={{ color: 'primary.main' }} />}
                 sx={{ 
-                  bgcolor: 'action.hover',
+                  bgcolor: 'transparent',
                   '& .MuiAccordionSummary-content': { my: 0 }
                 }}
               >
-                <Typography variant="subtitle2">Output</Typography>
+                <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>Output</Typography>
               </AccordionSummary>
               <AccordionDetails>
                 <TextField
@@ -596,10 +735,27 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
                     metadata: { ...nodeData.metadata, additionalInput: e.target.value }
                   })}
                   multiline
-                  rows={6}
+                  rows={4}
                   fullWidth
                   variant="outlined"
                   placeholder="Output will appear here..."
+                  sx={{ 
+                    '& .MuiOutlinedInput-root': { 
+                      py: 1,
+                      '&:hover .MuiOutlinedInput-notchedOutline': {
+                        borderColor: 'rgba(255, 255, 255, 0.2)'
+                      }
+                    },
+                    '& .MuiOutlinedInput-notchedOutline': { 
+                      borderColor: 'rgba(255, 255, 255, 0.12)',
+                      transition: 'border-color 0.2s ease-in-out'
+                    },
+                    '& .MuiOutlinedInput-input': {
+                      color: 'text.primary',
+                      fontSize: '0.875rem',
+                      lineHeight: 1.5
+                    }
+                  }}
                 />
               </AccordionDetails>
             </Accordion>

@@ -157,84 +157,62 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({ title }) => {
         return (
           <>
             <span className="section"># Project Management</span>
-            <span className="command">project init &lt;name&gt; [--template=&lt;template_name&gt;]</span>
-            <span className="comment"># Initialize new project</span>
             <span className="command">project status</span>
-            <span className="comment"># Show project health metrics</span>
-            <span className="command">project config</span>
-            <span className="comment"># View/modify project settings</span>
-            <span className="command">project deploy [--env=&lt;environment&gt;]</span>
-            <span className="comment"># Deploy project</span>
+            <span className="comment"># Show project health metrics and resource usage</span>
+            <span className="command">project optimize</span>
+            <span className="comment"># Get AI recommendations for project improvements</span>
+            <span className="command">project analyze bottlenecks</span>
+            <span className="comment"># Identify and suggest fixes for performance issues</span>
 
-            <span className="section"># AI Assistant</span>
-            <span className="command">project ai suggest &lt;prompt&gt;</span>
-            <span className="comment"># Get AI suggestions for project</span>
-            <span className="command">project ai analyze</span>
-            <span className="comment"># Get AI analysis of project structure</span>
-            <span className="command">project ai optimize</span>
-            <span className="comment"># Get optimization recommendations</span>
+            <span className="section"># Resource Management</span>
+            <span className="command">show memory usage</span>
+            <span className="comment"># Display memory usage across chains</span>
+            <span className="command">optimize for cost</span>
+            <span className="comment"># Get cost optimization recommendations</span>
           </>
         );
       case 'Workflow Terminal':
         return (
           <>
-            <span className="section"># Chain Operations</span>
-            <span className="command">chain create &lt;name&gt;</span>
-            <span className="comment"># Create new script chain</span>
-            <span className="command">chain add &lt;node_type&gt; [--config=&lt;config&gt;]</span>
-            <span className="comment"># Add node to chain</span>
-            <span className="command">chain connect &lt;from&gt; &lt;to&gt;</span>
-            <span className="comment"># Connect nodes</span>
-            <span className="command">chain execute [--async]</span>
-            <span className="comment"># Execute chain</span>
-
-            <span className="section"># AI Integration</span>
-            <span className="command">chain ai validate</span>
-            <span className="comment"># Validate chain structure</span>
-            <span className="command">chain ai optimize</span>
-            <span className="comment"># Optimize chain performance</span>
-            <span className="command">chain ai explain</span>
-            <span className="comment"># Explain chain behavior</span>
-
             <span className="section"># Node Operations</span>
-            <span className="command">node config &lt;node_id&gt;</span>
-            <span className="comment"># Configure node</span>
-            <span className="command">node test &lt;node_id&gt;</span>
-            <span className="comment"># Test node in isolation</span>
-            <span className="command">node debug &lt;node_id&gt;</span>
-            <span className="comment"># Debug specific node</span>
-            <span className="command">node monitor &lt;node_id&gt;</span>
-            <span className="comment"># Monitor node performance</span>
+            <span className="command">analyze node &lt;node_id&gt;</span>
+            <span className="comment"># Get node performance and parameter analysis</span>
+            <span className="command">debug node &lt;node_id&gt;</span>
+            <span className="comment"># Start interactive node debugging session</span>
+            <span className="command">optimize node &lt;node_id&gt;</span>
+            <span className="comment"># Get AI suggestions for node parameters</span>
 
-            <span className="section"># AI Features</span>
-            <span className="command">node ai suggest-inputs</span>
-            <span className="comment"># Suggest input configurations</span>
-            <span className="command">node ai explain-behavior</span>
-            <span className="comment"># Explain node behavior</span>
-            <span className="command">node ai optimize</span>
-            <span className="comment"># Optimize node configuration</span>
+            <span className="section"># Model Settings</span>
+            <span className="command">set model &lt;node_id&gt; &lt;model_name&gt;</span>
+            <span className="comment"># Change node's model (gpt-4, claude-3, etc)</span>
+            <span className="command">set temp &lt;node_id&gt; &lt;value&gt;</span>
+            <span className="comment"># Adjust temperature (0-2)</span>
+            <span className="command">set tokens &lt;node_id&gt; &lt;limit&gt;</span>
+            <span className="comment"># Set token limit</span>
+
+            <span className="section"># Content</span>
+            <span className="command">show input &lt;node_id&gt;</span>
+            <span className="comment"># Display node's current input</span>
+            <span className="command">show output &lt;node_id&gt;</span>
+            <span className="comment"># Display node's current output</span>
+            <span className="command">clear &lt;node_id&gt;</span>
+            <span className="comment"># Clear node's content</span>
           </>
         );
       case 'Global Terminal':
         return (
           <>
-            <span className="section"># Workspace Operations</span>
-            <span className="command">workspace ls</span>
-            <span className="comment"># List all workspaces</span>
-            <span className="command">workspace create &lt;name&gt; [--type=&lt;type&gt;]</span>
-            <span className="comment"># Create new workspace</span>
-            <span className="command">workspace switch &lt;name&gt;</span>
-            <span className="comment"># Switch active workspace</span>
-            <span className="command">workspace share &lt;user&gt;</span>
-            <span className="comment"># Share workspace with user</span>
+            <span className="section"># Workspace Intelligence</span>
+            <span className="command">find similar patterns</span>
+            <span className="comment"># Discover reusable patterns across chains</span>
+            <span className="command">sync chain settings</span>
+            <span className="comment"># Synchronize settings across related chains</span>
 
-            <span className="section"># AI Integration</span>
-            <span className="command">workspace ai search &lt;query&gt;</span>
-            <span className="comment"># Semantic search across workspace</span>
-            <span className="command">workspace ai refactor</span>
-            <span className="comment"># AI-assisted code refactoring</span>
-            <span className="command">workspace ai document</span>
-            <span className="comment"># Generate documentation</span>
+            <span className="section"># Cross-Chain Operations</span>
+            <span className="command">analyze bottlenecks</span>
+            <span className="comment"># Identify performance issues across chains</span>
+            <span className="command">suggest improvements</span>
+            <span className="comment"># Get AI recommendations for workflow optimization</span>
           </>
         );
       default:
