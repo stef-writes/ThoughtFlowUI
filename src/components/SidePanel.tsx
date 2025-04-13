@@ -180,11 +180,11 @@ const SidePanel: React.FC = () => {
       type: 'viewer',
       position: { x: 100, y: 100 },
       data: { 
-        label: 'Project Root',
+        label: 'Product Vision',
         color: '#4CAF50',
         opacity: 0.8,
         metadata: {
-          Type: 'Project',
+          Type: 'Strategy',
           Status: 'Active',
           'Last Modified': '2024-03-20',
           'Node Count': '5',
@@ -198,11 +198,11 @@ const SidePanel: React.FC = () => {
       type: 'viewer',
       position: { x: 250, y: 50 },
       data: { 
-        label: 'Chain A',
+        label: 'Tech Stack',
         color: '#2196F3',
         opacity: 0.7,
         metadata: {
-          Type: 'Processing Chain',
+          Type: 'Architecture',
           Status: 'Running',
           'Input Nodes': '2',
           'Output Nodes': '1',
@@ -216,15 +216,15 @@ const SidePanel: React.FC = () => {
       type: 'viewer',
       position: { x: 200, y: 200 },
       data: { 
-        label: 'Node B',
+        label: 'User Flow',
         color: '#FFC107',
         opacity: 0.6,
         metadata: {
-          Type: 'Processing Node',
+          Type: 'Design',
           Status: 'Active',
-          'Input Type': 'Text',
-          'Output Type': 'Vector',
-          Model: 'GPT-4'
+          'Input Type': 'Research',
+          'Output Type': 'Prototype',
+          Model: 'User Testing'
         }
       },
       style: { width: 50, height: 50 },

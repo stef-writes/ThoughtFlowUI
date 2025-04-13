@@ -20,28 +20,28 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 
-// Mock data with enterprise-style workflow names
+// Mock data with founder and creator focused workflow names
 const mockWorkflows = [
   {
     id: '1',
-    name: 'Network 1',
-    description: 'Primary neural network configuration',
+    name: 'Product Strategy',
+    description: 'Define product vision, roadmap, and key metrics',
     nodes: 5,
     lastRun: '2024-03-15 14:30',
     status: 'active',
   },
   {
     id: '2',
-    name: 'Network 2',
-    description: 'Secondary neural network configuration',
+    name: 'Technical Design',
+    description: 'System architecture and technical specifications',
     nodes: 8,
     lastRun: '2024-03-14 09:15',
     status: 'active',
   },
   {
     id: '3',
-    name: 'Network 3',
-    description: 'Tertiary neural network configuration',
+    name: 'User Research',
+    description: 'User interviews, surveys, and feedback analysis',
     nodes: 6,
     lastRun: '2024-03-13 16:45',
     status: 'active',

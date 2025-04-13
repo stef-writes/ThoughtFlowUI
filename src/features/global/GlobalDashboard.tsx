@@ -17,12 +17,12 @@ import FolderIcon from '@mui/icons-material/Folder';
 import GroupIcon from '@mui/icons-material/Group';
 import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
-// Mock data with enterprise-style project names
+// Mock data with founder and creator focused project names
 const mockProjects = [
   {
     id: '1',
-    name: 'Frontal Lobe',
-    description: 'Executive functions, decision making, and personality',
+    name: 'Product Vision',
+    description: 'Product strategy, roadmap, and feature prioritization',
     workflows: 3,
     teamSize: 8,
     lastUpdated: '2024-03-15',
@@ -30,8 +30,8 @@ const mockProjects = [
   },
   {
     id: '2',
-    name: 'Parietal Lobe',
-    description: 'Sensory integration and spatial awareness',
+    name: 'Technical Architecture',
+    description: 'System design, infrastructure, and technical decisions',
     workflows: 3,
     teamSize: 6,
     lastUpdated: '2024-03-14',
@@ -39,8 +39,8 @@ const mockProjects = [
   },
   {
     id: '3',
-    name: 'Temporal Lobe',
-    description: 'Memory, language processing, and auditory perception',
+    name: 'User Experience',
+    description: 'User research, design thinking, and product feedback',
     workflows: 3,
     teamSize: 12,
     lastUpdated: '2024-03-13',
@@ -48,8 +48,8 @@ const mockProjects = [
   },
   {
     id: '4',
-    name: 'Occipital Lobe',
-    description: 'Visual processing and interpretation',
+    name: 'Growth Strategy',
+    description: 'Marketing, growth hacking, and user acquisition',
     workflows: 3,
     teamSize: 6,
     lastUpdated: '2024-03-12',

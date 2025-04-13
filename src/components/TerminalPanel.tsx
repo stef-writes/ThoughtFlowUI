@@ -153,54 +153,28 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({ title }) => {
 
   const getTerminalContent = () => {
     switch (title) {
-      case 'Global Terminal':
-        return (
-          <>
-            <span className="section"># Global Operations</span>
-            <span className="command">list projects</span>
-            <span className="comment"># Show all projects in the system</span>
-            <span className="command">create project &lt;name&gt;</span>
-            <span className="comment"># Create a new project</span>
-            <span className="command">delete project &lt;project_id&gt;</span>
-            <span className="comment"># Remove a project and all its contents</span>
-
-            <span className="section"># System Management</span>
-            <span className="command">system status</span>
-            <span className="comment"># Show system-wide health metrics</span>
-            <span className="command">system optimize</span>
-            <span className="comment"># Get AI recommendations for system improvements</span>
-          </>
-        );
       case 'Project Terminal':
         return (
           <>
             <span className="section"># Project Management</span>
-            <span className="command">list workspaces</span>
-            <span className="comment"># Show all workspaces in this project</span>
-            <span className="command">create workspace &lt;name&gt;</span>
-            <span className="comment"># Create a new workspace</span>
-            <span className="command">delete workspace &lt;workspace_id&gt;</span>
-            <span className="comment"># Remove a workspace and its chains</span>
+            <span className="command">project status</span>
+            <span className="comment"># Show project health metrics and resource usage</span>
+            <span className="command">project optimize</span>
+            <span className="comment"># Get AI recommendations for project improvements</span>
+            <span className="command">project analyze bottlenecks</span>
+            <span className="comment"># Identify and suggest fixes for performance issues</span>
 
             <span className="section"># Resource Management</span>
-            <span className="command">show project resources</span>
-            <span className="comment"># Display resource usage across workspaces</span>
-            <span className="command">optimize project</span>
-            <span className="comment"># Get AI recommendations for project optimization</span>
+            <span className="command">show memory usage</span>
+            <span className="comment"># Display memory usage across chains</span>
+            <span className="command">optimize for cost</span>
+            <span className="comment"># Get cost optimization recommendations</span>
           </>
         );
       case 'Workflow Terminal':
         return (
           <>
-            <span className="section"># Chain Operations</span>
-            <span className="command">list chains</span>
-            <span className="comment"># Show all chains in this workspace</span>
-            <span className="command">create chain &lt;name&gt;</span>
-            <span className="comment"># Create a new chain</span>
-            <span className="command">delete chain &lt;chain_id&gt;</span>
-            <span className="comment"># Remove a chain and its nodes</span>
-
-            <span className="section"># Node Management</span>
+            <span className="section"># Node Operations</span>
             <span className="command">analyze node &lt;node_id&gt;</span>
             <span className="comment"># Get node performance and parameter analysis</span>
             <span className="command">debug node &lt;node_id&gt;</span>
@@ -215,6 +189,30 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({ title }) => {
             <span className="comment"># Adjust temperature (0-2)</span>
             <span className="command">set tokens &lt;node_id&gt; &lt;limit&gt;</span>
             <span className="comment"># Set token limit</span>
+
+            <span className="section"># Content</span>
+            <span className="command">show input &lt;node_id&gt;</span>
+            <span className="comment"># Display node's current input</span>
+            <span className="command">show output &lt;node_id&gt;</span>
+            <span className="comment"># Display node's current output</span>
+            <span className="command">clear &lt;node_id&gt;</span>
+            <span className="comment"># Clear node's content</span>
+          </>
+        );
+      case 'Global Terminal':
+        return (
+          <>
+            <span className="section"># Workspace Intelligence</span>
+            <span className="command">find similar patterns</span>
+            <span className="comment"># Discover reusable patterns across chains</span>
+            <span className="command">sync chain settings</span>
+            <span className="comment"># Synchronize settings across related chains</span>
+
+            <span className="section"># Cross-Chain Operations</span>
+            <span className="command">analyze bottlenecks</span>
+            <span className="comment"># Identify performance issues across chains</span>
+            <span className="command">suggest improvements</span>
+            <span className="comment"># Get AI recommendations for workflow optimization</span>
           </>
         );
       default:
