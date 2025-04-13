@@ -31,13 +31,21 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       {/* Notion-style header */}
       <Box
         sx={{
-          ml: isSidebarCollapsed ? '60px' : '240px',
+          position: 'fixed',
+          top: 0,
+          right: 0,
+          left: isSidebarCollapsed ? '240px' : '60px',
           height: '45px',
           display: 'flex',
           alignItems: 'center',
           px: 2,
           borderBottom: `1px solid ${theme.palette.divider}`,
           backgroundColor: theme.palette.background.default,
+          zIndex: 1000,
+          transition: theme.transitions.create(['left', 'width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+          }),
         }}
       >
         <Typography
@@ -80,18 +88,23 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
         sx={{ 
           flexGrow: 1,
           position: 'relative',
-          ml: isSidebarCollapsed ? '60px' : '240px',
+          marginTop: '45px', // Account for fixed header
+          marginLeft: isSidebarCollapsed ? '240px' : '60px',
+          transition: theme.transitions.create(['margin', 'width'], {
+            easing: theme.transitions.easing.sharp,
+            duration: theme.transitions.duration.enteringScreen,
+          }),
           ...(isWorkflowEditor ? {
             padding: 0,
-            maxWidth: '100%',
+            width: `calc(100% - ${isSidebarCollapsed ? '240px' : '60px'})`,
           } : {
             padding: theme.spacing(4, 3),
-            maxWidth: '100%',
-            margin: '0 auto',
-            width: '100%',
-            [theme.breakpoints.up('lg')]: {
+            width: `calc(100% - ${isSidebarCollapsed ? '240px' : '60px'})`,
+            '& > div': {
               maxWidth: theme.breakpoints.values.lg,
-            },
+              margin: '0 auto',
+              width: '100%',
+            }
           }),
         }}
       >
