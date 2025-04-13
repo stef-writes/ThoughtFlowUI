@@ -10,6 +10,7 @@ import ChevronRightIcon from '@mui/icons-material/ChevronRight';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import PublishIcon from '@mui/icons-material/Publish';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 const SIDEBAR_WIDTH = 240;
@@ -494,11 +495,12 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ onToggle }) => {
         </TopSection>
 
         <NavigationList ref={listRef} role="menu">
-          <NavItem 
-            active={location.pathname === '/'}
+          <NavItem
             role="menuitem"
             tabIndex={0}
             onKeyDown={(e) => handleKeyDown(e, 'home', 'project')}
+            onClick={() => navigate('/')}
+            active={location.pathname === '/'}
           >
             <ListItemIcon sx={{ color: 'text.secondary', minWidth: 32 }}>
               <HomeIcon sx={{ fontSize: 20 }} />
@@ -510,6 +512,16 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ onToggle }) => {
                 fontWeight: 400
               }}
             />
+          </NavItem>
+
+          <NavItem
+            onClick={() => navigate('/publishing')}
+            active={location.pathname === '/publishing'}
+          >
+            <ListItemIcon sx={{ minWidth: 36 }}>
+              <PublishIcon fontSize="small" />
+            </ListItemIcon>
+            <ListItemText primary="Publishing" />
           </NavItem>
 
           {mockProjects.map(project => renderProject(project, 0))}

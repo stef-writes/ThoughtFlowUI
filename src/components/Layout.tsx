@@ -16,8 +16,8 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const isProjectView = location.pathname.includes('/projects/');
   const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
 
-  // Extract path segments for breadcrumb
-  const pathSegments = location.pathname.split('/').filter(Boolean);
+  // Calculate sidebar width based on state
+  const sidebarWidth = isSidebarCollapsed ? '60px' : '240px';
 
   return (
     <Box sx={{ 
@@ -34,7 +34,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           position: 'fixed',
           top: 0,
           right: 0,
-          left: isSidebarCollapsed ? '240px' : '60px',
+          left: sidebarWidth,
           height: '45px',
           display: 'flex',
           alignItems: 'center',
@@ -47,41 +47,7 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
             duration: theme.transitions.duration.enteringScreen,
           }),
         }}
-      >
-        <Typography
-          sx={{
-            display: 'flex',
-            alignItems: 'center',
-            gap: 1,
-            color: theme.palette.text.secondary,
-            fontSize: '14px',
-            '& .segment': {
-              color: theme.palette.text.primary,
-              cursor: 'pointer',
-              textTransform: 'capitalize',
-              '&:hover': {
-                backgroundColor: theme.palette.action.hover,
-                borderRadius: 1
-              }
-            }
-          }}
-        >
-          {pathSegments.length > 0 ? (
-            pathSegments.map((segment, index) => (
-              <React.Fragment key={segment}>
-                <Box component="span" className="segment">
-                  {segment}
-                </Box>
-                {index < pathSegments.length - 1 && " / "}
-              </React.Fragment>
-            ))
-          ) : (
-            <Box component="span" className="segment">
-              Home
-            </Box>
-          )}
-        </Typography>
-      </Box>
+      />
 
       <Box 
         component="main" 
@@ -89,17 +55,17 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
           flexGrow: 1,
           position: 'relative',
           marginTop: '45px', // Account for fixed header
-          marginLeft: isSidebarCollapsed ? '240px' : '60px',
+          marginLeft: sidebarWidth,
           transition: theme.transitions.create(['margin', 'width'], {
             easing: theme.transitions.easing.sharp,
             duration: theme.transitions.duration.enteringScreen,
           }),
           ...(isWorkflowEditor ? {
             padding: 0,
-            width: `calc(100% - ${isSidebarCollapsed ? '240px' : '60px'})`,
+            width: `calc(100% - ${sidebarWidth})`,
           } : {
             padding: theme.spacing(4, 3),
-            width: `calc(100% - ${isSidebarCollapsed ? '240px' : '60px'})`,
+            width: `calc(100% - ${sidebarWidth})`,
             '& > div': {
               maxWidth: theme.breakpoints.values.lg,
               margin: '0 auto',

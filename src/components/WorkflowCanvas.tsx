@@ -16,15 +16,31 @@ import 'reactflow/dist/style.css';
 import { useWorkflowStore } from '../store/workflowStore';
 import CustomNode from './CustomNode';
 import NodeExpandedView from './NodeExpandedView';
-import { Paper } from '@mui/material';
+import { Paper, Button, Tooltip, alpha } from '@mui/material';
+import AddIcon from '@mui/icons-material/Add';
+import { v4 as uuidv4 } from 'uuid';
+import { WorkflowNode } from '../types/workflow';
 
 const nodeTypes: NodeTypes = {
   custom: CustomNode,
 };
 
 const WorkflowCanvas: React.FC = () => {
-  const { nodes, edges, addEdge: addEdgeToStore, updateNodePosition } = useWorkflowStore();
-  const [expandedNode, setExpandedNode] = useState<Node | null>(null);
+  const { nodes, edges, addEdge: addEdgeToStore, updateNodePosition, addNode } = useWorkflowStore();
+  const [expandedNode, setExpandedNode] = useState<WorkflowNode | null>(null);
+
+  const handleAddNode = () => {
+    const newNode: WorkflowNode = {
+      id: uuidv4(),
+      type: 'custom',
+      position: { x: window.innerWidth / 3, y: window.innerHeight / 3 },
+      data: {
+        label: 'New Node',
+        content: '',
+      },
+    };
+    addNode(newNode);
+  };
 
   // Filter edges based on selected source nodes
   const filteredEdges = useMemo(() => {
@@ -59,7 +75,7 @@ const WorkflowCanvas: React.FC = () => {
   const handleNodeDoubleClick = useCallback((nodeId: string) => {
     const node = nodes.find((n) => n.id === nodeId);
     if (node) {
-      setExpandedNode(node);
+      setExpandedNode(node as WorkflowNode);
     }
   }, [nodes]);
 
@@ -80,6 +96,34 @@ const WorkflowCanvas: React.FC = () => {
         bottom: 0,
       }}
     >
+      {/* Add Node Button */}
+      <Tooltip title="Add new node" arrow>
+        <Button
+          variant="contained"
+          startIcon={<AddIcon />}
+          onClick={handleAddNode}
+          sx={{
+            position: 'absolute',
+            top: '20px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 5,
+            backgroundColor: theme => alpha(theme.palette.primary.main, 0.9),
+            backdropFilter: 'blur(8px)',
+            '&:hover': {
+              backgroundColor: theme => theme.palette.primary.main,
+            },
+            textTransform: 'none',
+            px: 3,
+            py: 1,
+            borderRadius: '20px',
+            boxShadow: '0 4px 12px rgba(0,0,0,0.15)',
+          }}
+        >
+          Add Node
+        </Button>
+      </Tooltip>
+
       <ReactFlow
         nodes={nodes}
         edges={filteredEdges}

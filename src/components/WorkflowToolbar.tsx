@@ -1,28 +1,11 @@
 import React from 'react';
 import { Box, Button, Typography } from '@mui/material';
-import AddIcon from '@mui/icons-material/Add';
 import ArrowBackIcon from '@mui/icons-material/ArrowBack';
-import { useWorkflowStore } from '../store/workflowStore';
-import { v4 as uuidv4 } from 'uuid';
 import { useNavigate, useParams, Link as RouterLink } from 'react-router-dom';
 
 const WorkflowToolbar: React.FC = () => {
-  const { addNode } = useWorkflowStore();
   const navigate = useNavigate();
   const { projectId, workspaceId, lociId, scriptchainId } = useParams();
-
-  const handleAddNode = () => {
-    const newNode = {
-      id: uuidv4(),
-      type: 'custom',
-      position: { x: 100, y: 100 },
-      data: {
-        label: 'New Node',
-        content: '',
-      },
-    };
-    addNode(newNode);
-  };
 
   const pathSegments = [
     { label: 'Projects', path: '/' },
@@ -105,22 +88,6 @@ const WorkflowToolbar: React.FC = () => {
           ))}
         </Typography>
       </Box>
-
-      <Button
-        variant="contained"
-        startIcon={<AddIcon />}
-        onClick={handleAddNode}
-        sx={{
-          backgroundColor: 'primary.main',
-          '&:hover': {
-            backgroundColor: 'primary.dark',
-          },
-          textTransform: 'none',
-          px: 2
-        }}
-      >
-        Add Node
-      </Button>
     </Box>
   );
 };

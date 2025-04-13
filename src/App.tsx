@@ -13,6 +13,7 @@ import WorkflowCanvas from './components/WorkflowCanvas';
 import WorkflowToolbar from './components/WorkflowToolbar';
 import AIFloatingAssistant from './components/AIFloatingAssistant';
 import HomePage from './pages/HomePage';
+import PublishingPage from './pages/PublishingPage';
 
 const App: React.FC = () => {
   return (
@@ -27,6 +28,7 @@ const App: React.FC = () => {
               <Route path="/projects/:projectId" element={<ProjectView />} />
               <Route path="/projects/:projectId/workspaces/:workspaceId" element={<WorkspaceView />} />
               <Route path="/projects/:projectId/workspaces/:workspaceId/loci/:lociId" element={<LociView />} />
+              <Route path="/publishing" element={<PublishingPage />} />
               <Route 
                 path="/projects/:projectId/workspaces/:workspaceId/loci/:lociId/scriptchains/:scriptchainId" 
                 element={
