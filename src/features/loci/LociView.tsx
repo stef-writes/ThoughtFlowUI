@@ -20,42 +20,42 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 
-// Mock data for workspaces
-const mockWorkspaces = [
+// Mock data for scriptchains
+const mockScriptChains = [
   {
     id: '1',
-    name: 'Backend Architecture',
-    description: 'Server-side components and infrastructure',
-    loci: 3,
-    lastUpdated: '2024-03-15 14:30',
+    name: 'User Authentication',
+    description: 'Handles user login, registration, and session management',
+    nodes: 5,
+    lastRun: '2024-03-15 14:30',
     status: 'active',
   },
   {
     id: '2',
-    name: 'Frontend Development',
-    description: 'User interface and client-side logic',
-    loci: 4,
-    lastUpdated: '2024-03-14 09:15',
+    name: 'Password Reset',
+    description: 'Manages password reset requests and token validation',
+    nodes: 4,
+    lastRun: '2024-03-14 09:15',
     status: 'active',
   },
   {
     id: '3',
-    name: 'Data Pipeline',
-    description: 'Data processing and analytics workflows',
-    loci: 2,
-    lastUpdated: '2024-03-13 16:45',
+    name: 'Session Management',
+    description: 'Handles session creation, validation, and cleanup',
+    nodes: 3,
+    lastRun: '2024-03-13 16:45',
     status: 'active',
   },
 ];
 
-const ProjectView: React.FC = () => {
+const LociView: React.FC = () => {
   const navigate = useNavigate();
-  const { projectId } = useParams();
+  const { projectId, workspaceId, lociId } = useParams();
 
-  // Mock project data
-  const project = {
-    id: projectId,
-    name: `Project ${projectId}`,
+  // Mock loci data
+  const loci = {
+    id: lociId,
+    name: `Loci ${lociId}`,
   };
 
   return (
@@ -76,7 +76,29 @@ const ProjectView: React.FC = () => {
           >
             Projects
           </Link>
-          <Typography color="text.primary">{project.name}</Typography>
+          <Link 
+            component={RouterLink} 
+            to={`/projects/${projectId}`}
+            color="inherit"
+            sx={{ 
+              textDecoration: 'none',
+              '&:hover': { textDecoration: 'underline' }
+            }}
+          >
+            Project {projectId}
+          </Link>
+          <Link 
+            component={RouterLink} 
+            to={`/projects/${projectId}/workspaces/${workspaceId}`}
+            color="inherit"
+            sx={{ 
+              textDecoration: 'none',
+              '&:hover': { textDecoration: 'underline' }
+            }}
+          >
+            Workspace {workspaceId}
+          </Link>
+          <Typography color="text.primary">{loci.name}</Typography>
         </Breadcrumbs>
 
         <Box sx={{ 
@@ -90,12 +112,12 @@ const ProjectView: React.FC = () => {
             color: 'text.primary',
             letterSpacing: '-0.5px'
           }}>
-            Workspaces
+            ScriptChains
           </Typography>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => {/* Add workspace logic */}}
+            onClick={() => {/* Add scriptchain logic */}}
             sx={{
               px: 3,
               py: 1.5,
@@ -108,13 +130,13 @@ const ProjectView: React.FC = () => {
               }
             }}
           >
-            New Workspace
+            New ScriptChain
           </Button>
         </Box>
 
         <Grid container spacing={4}>
-          {mockWorkspaces.map((workspace) => (
-            <Grid item xs={12} sm={6} md={4} key={workspace.id}>
+          {mockScriptChains.map((scriptchain) => (
+            <Grid item xs={12} sm={6} md={4} key={scriptchain.id}>
               <Card 
                 sx={{ 
                   height: '100%',
@@ -129,7 +151,7 @@ const ProjectView: React.FC = () => {
               >
                 <CardActionArea 
                   sx={{ height: '100%' }}
-                  onClick={() => navigate(`/projects/${projectId}/workspaces/${workspace.id}`)}
+                  onClick={() => navigate(`/projects/${projectId}/workspaces/${workspaceId}/loci/${lociId}/scriptchains/${scriptchain.id}`)}
                 >
                   <CardContent sx={{ p: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
@@ -146,10 +168,10 @@ const ProjectView: React.FC = () => {
                           fontWeight: 600,
                           mb: 0.5
                         }}>
-                          {workspace.name}
+                          {scriptchain.name}
                         </Typography>
                         <Chip 
-                          label={workspace.status} 
+                          label={scriptchain.status} 
                           size="small"
                           color="success"
                           sx={{ 
@@ -166,7 +188,7 @@ const ProjectView: React.FC = () => {
                       color="text.secondary"
                       sx={{ mb: 2 }}
                     >
-                      {workspace.description}
+                      {scriptchain.description}
                     </Typography>
 
                     <Stack 
@@ -186,7 +208,7 @@ const ProjectView: React.FC = () => {
                           mr: 0.5 
                         }} />
                         <Typography variant="body2" color="text.secondary">
-                          {workspace.loci} loci
+                          {scriptchain.nodes} nodes
                         </Typography>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
@@ -196,7 +218,7 @@ const ProjectView: React.FC = () => {
                           mr: 0.5 
                         }} />
                         <Typography variant="body2" color="text.secondary">
-                          Updated: {workspace.lastUpdated}
+                          Last run: {scriptchain.lastRun}
                         </Typography>
                       </Box>
                     </Stack>
@@ -211,4 +233,4 @@ const ProjectView: React.FC = () => {
   );
 };
 
-export default ProjectView; 
+export default LociView; 

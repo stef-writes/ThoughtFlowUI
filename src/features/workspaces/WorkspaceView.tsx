@@ -8,61 +8,88 @@ import {
   CardContent, 
   CardActionArea,
   Button,
+  Breadcrumbs,
+  Link,
   Chip,
   Stack,
 } from '@mui/material';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams, Link as RouterLink } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
-import FolderIcon from '@mui/icons-material/Folder';
-import GroupIcon from '@mui/icons-material/Group';
-import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
+import AccountTreeIcon from '@mui/icons-material/AccountTree';
+import NavigateNextIcon from '@mui/icons-material/NavigateNext';
+import ScheduleIcon from '@mui/icons-material/Schedule';
+import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 
-// Mock data with founder and creator focused project names
-const mockProjects = [
+// Mock data for loci
+const mockLoci = [
   {
     id: '1',
-    name: 'Product Vision',
-    description: 'Product strategy, roadmap, and feature prioritization',
-    workflows: 3,
-    teamSize: 8,
-    lastUpdated: '2024-03-15',
+    name: 'Authentication Flow',
+    description: 'User authentication and authorization processes',
+    scriptchains: 3,
+    lastUpdated: '2024-03-15 14:30',
     status: 'active',
   },
   {
     id: '2',
-    name: 'Technical Architecture',
-    description: 'System design, infrastructure, and technical decisions',
-    workflows: 3,
-    teamSize: 6,
-    lastUpdated: '2024-03-14',
+    name: 'Data Processing',
+    description: 'Data transformation and validation workflows',
+    scriptchains: 4,
+    lastUpdated: '2024-03-14 09:15',
     status: 'active',
   },
   {
     id: '3',
-    name: 'User Experience',
-    description: 'User research, design thinking, and product feedback',
-    workflows: 3,
-    teamSize: 12,
-    lastUpdated: '2024-03-13',
-    status: 'active',
-  },
-  {
-    id: '4',
-    name: 'Growth Strategy',
-    description: 'Marketing, growth hacking, and user acquisition',
-    workflows: 3,
-    teamSize: 6,
-    lastUpdated: '2024-03-12',
+    name: 'API Integration',
+    description: 'External service connections and data sync',
+    scriptchains: 2,
+    lastUpdated: '2024-03-13 16:45',
     status: 'active',
   },
 ];
 
-const GlobalDashboard: React.FC = () => {
+const WorkspaceView: React.FC = () => {
   const navigate = useNavigate();
+  const { projectId, workspaceId } = useParams();
+
+  // Mock workspace data
+  const workspace = {
+    id: workspaceId,
+    name: `Workspace ${workspaceId}`,
+  };
 
   return (
     <Box sx={{ py: 6 }}>
       <Container maxWidth="lg">
+        <Breadcrumbs 
+          separator={<NavigateNextIcon fontSize="small" />} 
+          sx={{ mb: 4 }}
+        >
+          <Link 
+            component={RouterLink} 
+            to="/" 
+            color="inherit" 
+            sx={{ 
+              textDecoration: 'none',
+              '&:hover': { textDecoration: 'underline' }
+            }}
+          >
+            Projects
+          </Link>
+          <Link 
+            component={RouterLink} 
+            to={`/projects/${projectId}`}
+            color="inherit"
+            sx={{ 
+              textDecoration: 'none',
+              '&:hover': { textDecoration: 'underline' }
+            }}
+          >
+            Project {projectId}
+          </Link>
+          <Typography color="text.primary">{workspace.name}</Typography>
+        </Breadcrumbs>
+
         <Box sx={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
@@ -74,12 +101,12 @@ const GlobalDashboard: React.FC = () => {
             color: 'text.primary',
             letterSpacing: '-0.5px'
           }}>
-            Lobes
+            Loci
           </Typography>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => {/* Add lobe logic */}}
+            onClick={() => {/* Add loci logic */}}
             sx={{
               px: 3,
               py: 1.5,
@@ -92,13 +119,13 @@ const GlobalDashboard: React.FC = () => {
               }
             }}
           >
-            New Lobe
+            New Loci
           </Button>
         </Box>
 
         <Grid container spacing={4}>
-          {mockProjects.map((project) => (
-            <Grid item xs={12} sm={6} md={4} key={project.id}>
+          {mockLoci.map((loci) => (
+            <Grid item xs={12} sm={6} md={4} key={loci.id}>
               <Card 
                 sx={{ 
                   height: '100%',
@@ -113,11 +140,11 @@ const GlobalDashboard: React.FC = () => {
               >
                 <CardActionArea 
                   sx={{ height: '100%' }}
-                  onClick={() => navigate(`/projects/${project.id}`)}
+                  onClick={() => navigate(`/projects/${projectId}/workspaces/${workspaceId}/loci/${loci.id}`)}
                 >
                   <CardContent sx={{ p: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <FolderIcon sx={{ 
+                      <AccountTreeIcon sx={{ 
                         fontSize: 32, 
                         color: 'primary.main', 
                         mr: 2,
@@ -130,10 +157,10 @@ const GlobalDashboard: React.FC = () => {
                           fontWeight: 600,
                           mb: 0.5
                         }}>
-                          {project.name}
+                          {loci.name}
                         </Typography>
                         <Chip 
-                          label={project.status} 
+                          label={loci.status} 
                           size="small"
                           color="success"
                           sx={{ 
@@ -150,7 +177,7 @@ const GlobalDashboard: React.FC = () => {
                       color="text.secondary"
                       sx={{ mb: 2 }}
                     >
-                      {project.description}
+                      {loci.description}
                     </Typography>
 
                     <Stack 
@@ -164,23 +191,23 @@ const GlobalDashboard: React.FC = () => {
                       }}
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <GroupIcon sx={{ 
+                        <PlayCircleOutlineIcon sx={{ 
                           fontSize: 16, 
                           color: 'text.secondary',
                           mr: 0.5 
                         }} />
                         <Typography variant="body2" color="text.secondary">
-                          {project.teamSize} members
+                          {loci.scriptchains} scriptchains
                         </Typography>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <CalendarTodayIcon sx={{ 
+                        <ScheduleIcon sx={{ 
                           fontSize: 16, 
                           color: 'text.secondary',
                           mr: 0.5 
                         }} />
                         <Typography variant="body2" color="text.secondary">
-                          Updated {project.lastUpdated}
+                          Updated: {loci.lastUpdated}
                         </Typography>
                       </Box>
                     </Stack>
@@ -195,4 +222,4 @@ const GlobalDashboard: React.FC = () => {
   );
 };
 
-export default GlobalDashboard; 
+export default WorkspaceView; 

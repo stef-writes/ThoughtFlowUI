@@ -20,18 +20,7 @@ import ShareIcon from '@mui/icons-material/Share';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 
 const WorkflowEditor: React.FC = () => {
-  const { projectId, workflowId } = useParams();
-
-  // Mock data
-  const project = {
-    id: projectId,
-    name: `Project ${projectId}`,
-  };
-
-  const workflow = {
-    id: workflowId,
-    name: `Workflow ${workflowId}`,
-  };
+  const { projectId, workspaceId, lociId, scriptchainId } = useParams();
 
   return (
     <Box sx={{ py: 4 }}>
@@ -60,9 +49,31 @@ const WorkflowEditor: React.FC = () => {
               '&:hover': { textDecoration: 'underline' }
             }}
           >
-            {project.name}
+            Project {projectId}
           </Link>
-          <Typography color="text.primary">{workflow.name}</Typography>
+          <Link 
+            component={RouterLink} 
+            to={`/projects/${projectId}/workspaces/${workspaceId}`}
+            color="inherit"
+            sx={{ 
+              textDecoration: 'none',
+              '&:hover': { textDecoration: 'underline' }
+            }}
+          >
+            Workspace {workspaceId}
+          </Link>
+          <Link 
+            component={RouterLink} 
+            to={`/projects/${projectId}/workspaces/${workspaceId}/loci/${lociId}`}
+            color="inherit"
+            sx={{ 
+              textDecoration: 'none',
+              '&:hover': { textDecoration: 'underline' }
+            }}
+          >
+            Loci {lociId}
+          </Link>
+          <Typography color="text.primary">ScriptChain {scriptchainId}</Typography>
         </Breadcrumbs>
 
         <Box sx={{ 
@@ -76,10 +87,10 @@ const WorkflowEditor: React.FC = () => {
             color: 'text.primary',
             letterSpacing: '-0.5px'
           }}>
-            {workflow.name} Editor
+            ScriptChain Editor
           </Typography>
           <Stack direction="row" spacing={1}>
-            <Tooltip title="Save Workflow">
+            <Tooltip title="Save ScriptChain">
               <IconButton 
                 color="primary"
                 sx={{ 
@@ -90,7 +101,7 @@ const WorkflowEditor: React.FC = () => {
                 <SaveIcon />
               </IconButton>
             </Tooltip>
-            <Tooltip title="Run Workflow">
+            <Tooltip title="Run ScriptChain">
               <IconButton 
                 color="success"
                 sx={{ 

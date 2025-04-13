@@ -88,7 +88,7 @@ const Content = styled(Box)({
   flexDirection: 'column',
 });
 
-const NetworkView = styled(Box)(({ theme }) => ({
+const ScriptChainView = styled(Box)(({ theme }) => ({
   width: '100%',
   height: '100%',
   backgroundColor: 'transparent',
@@ -173,80 +173,9 @@ const SidePanel: React.FC = () => {
   const startHeight = useRef(0);
   const [showLabels, setShowLabels] = useState(true);
 
-  // Example nodes and edges - this would be dynamic based on system state
-  const nodes: Node[] = [
-    {
-      id: '1',
-      type: 'viewer',
-      position: { x: 100, y: 100 },
-      data: { 
-        label: 'Product Vision',
-        color: '#4CAF50',
-        opacity: 0.8,
-        metadata: {
-          Type: 'Strategy',
-          Status: 'Active',
-          'Last Modified': '2024-03-20',
-          'Node Count': '5',
-          Version: '1.0.0'
-        }
-      },
-      style: { width: 60, height: 60 },
-    },
-    {
-      id: '2',
-      type: 'viewer',
-      position: { x: 250, y: 50 },
-      data: { 
-        label: 'Tech Stack',
-        color: '#2196F3',
-        opacity: 0.7,
-        metadata: {
-          Type: 'Architecture',
-          Status: 'Running',
-          'Input Nodes': '2',
-          'Output Nodes': '1',
-          Performance: '98.5%'
-        }
-      },
-      style: { width: 40, height: 40 },
-    },
-    {
-      id: '3',
-      type: 'viewer',
-      position: { x: 200, y: 200 },
-      data: { 
-        label: 'User Flow',
-        color: '#FFC107',
-        opacity: 0.6,
-        metadata: {
-          Type: 'Design',
-          Status: 'Active',
-          'Input Type': 'Research',
-          'Output Type': 'Prototype',
-          Model: 'User Testing'
-        }
-      },
-      style: { width: 50, height: 50 },
-    },
-  ];
-
-  const edges: Edge[] = [
-    { 
-      id: 'e1-2', 
-      source: '1', 
-      target: '2',
-      type: 'default',
-      animated: true,
-    },
-    { 
-      id: 'e1-3', 
-      source: '1', 
-      target: '3',
-      type: 'default',
-      animated: false,
-    },
-  ];
+  // Initialize with empty nodes and edges
+  const nodes: Node[] = [];
+  const edges: Edge[] = [];
 
   const handleWidthMouseDown = (e: React.MouseEvent) => {
     setIsDraggingWidth(true);

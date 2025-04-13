@@ -5,8 +5,10 @@ import { ReactFlowProvider } from 'reactflow';
 import 'reactflow/dist/style.css';
 import theme from './theme';
 import Layout from './components/Layout';
-import GlobalDashboard from './features/global/GlobalDashboard';
+import Projects from './features/global/Projects';
 import ProjectView from './features/projects/ProjectView';
+import WorkspaceView from './features/workspaces/WorkspaceView';
+import LociView from './features/loci/LociView';
 import WorkflowCanvas from './components/WorkflowCanvas';
 import WorkflowToolbar from './components/WorkflowToolbar';
 import AIFloatingAssistant from './components/AIFloatingAssistant';
@@ -19,17 +21,26 @@ const App: React.FC = () => {
         <ReactFlowProvider>
           <Layout>
             <Routes>
-              <Route path="/" element={<GlobalDashboard />} />
+              <Route path="/" element={<Projects />} />
               <Route path="/projects/:projectId" element={<ProjectView />} />
+              <Route path="/projects/:projectId/workspaces/:workspaceId" element={<WorkspaceView />} />
+              <Route path="/projects/:projectId/workspaces/:workspaceId/loci/:lociId" element={<LociView />} />
               <Route 
-                path="/projects/:projectId/workflows/:workflowId" 
+                path="/projects/:projectId/workspaces/:workspaceId/loci/:lociId/scriptchains/:scriptchainId" 
                 element={
                   <Box sx={{ 
                     display: 'flex', 
                     flexDirection: 'column', 
-                    height: 'calc(100vh - 64px)',
+                    height: '100vh',
                     width: '100%',
                     overflow: 'hidden',
+                    position: 'fixed',
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    margin: 0,
+                    padding: 0
                   }}>
                     <WorkflowToolbar />
                     <Box sx={{ 

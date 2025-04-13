@@ -8,77 +8,61 @@ import {
   CardContent, 
   CardActionArea,
   Button,
-  Breadcrumbs,
-  Link,
   Chip,
   Stack,
 } from '@mui/material';
-import { useNavigate, useParams, Link as RouterLink } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import ScheduleIcon from '@mui/icons-material/Schedule';
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import FolderIcon from '@mui/icons-material/Folder';
+import GroupIcon from '@mui/icons-material/Group';
+import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 
-// Mock data for workspaces
-const mockWorkspaces = [
+// Mock data with founder and creator focused project names
+const mockProjects = [
   {
     id: '1',
-    name: 'Backend Architecture',
-    description: 'Server-side components and infrastructure',
-    loci: 3,
-    lastUpdated: '2024-03-15 14:30',
+    name: 'Product Vision',
+    description: 'Product strategy, roadmap, and feature prioritization',
+    workspaces: 3,
+    teamSize: 8,
+    lastUpdated: '2024-03-15',
     status: 'active',
   },
   {
     id: '2',
-    name: 'Frontend Development',
-    description: 'User interface and client-side logic',
-    loci: 4,
-    lastUpdated: '2024-03-14 09:15',
+    name: 'Technical Architecture',
+    description: 'System design, infrastructure, and technical decisions',
+    workspaces: 3,
+    teamSize: 6,
+    lastUpdated: '2024-03-14',
     status: 'active',
   },
   {
     id: '3',
-    name: 'Data Pipeline',
-    description: 'Data processing and analytics workflows',
-    loci: 2,
-    lastUpdated: '2024-03-13 16:45',
+    name: 'User Experience',
+    description: 'User research, design thinking, and product feedback',
+    workspaces: 3,
+    teamSize: 12,
+    lastUpdated: '2024-03-13',
+    status: 'active',
+  },
+  {
+    id: '4',
+    name: 'Growth Strategy',
+    description: 'Marketing, growth hacking, and user acquisition',
+    workspaces: 3,
+    teamSize: 6,
+    lastUpdated: '2024-03-12',
     status: 'active',
   },
 ];
 
-const ProjectView: React.FC = () => {
+const Projects: React.FC = () => {
   const navigate = useNavigate();
-  const { projectId } = useParams();
-
-  // Mock project data
-  const project = {
-    id: projectId,
-    name: `Project ${projectId}`,
-  };
 
   return (
     <Box sx={{ py: 6 }}>
       <Container maxWidth="lg">
-        <Breadcrumbs 
-          separator={<NavigateNextIcon fontSize="small" />} 
-          sx={{ mb: 4 }}
-        >
-          <Link 
-            component={RouterLink} 
-            to="/" 
-            color="inherit" 
-            sx={{ 
-              textDecoration: 'none',
-              '&:hover': { textDecoration: 'underline' }
-            }}
-          >
-            Projects
-          </Link>
-          <Typography color="text.primary">{project.name}</Typography>
-        </Breadcrumbs>
-
         <Box sx={{ 
           display: 'flex', 
           justifyContent: 'space-between', 
@@ -90,12 +74,12 @@ const ProjectView: React.FC = () => {
             color: 'text.primary',
             letterSpacing: '-0.5px'
           }}>
-            Workspaces
+            Projects
           </Typography>
           <Button
             variant="contained"
             startIcon={<AddIcon />}
-            onClick={() => {/* Add workspace logic */}}
+            onClick={() => {/* Add project logic */}}
             sx={{
               px: 3,
               py: 1.5,
@@ -108,13 +92,13 @@ const ProjectView: React.FC = () => {
               }
             }}
           >
-            New Workspace
+            New Project
           </Button>
         </Box>
 
         <Grid container spacing={4}>
-          {mockWorkspaces.map((workspace) => (
-            <Grid item xs={12} sm={6} md={4} key={workspace.id}>
+          {mockProjects.map((project) => (
+            <Grid item xs={12} sm={6} md={4} key={project.id}>
               <Card 
                 sx={{ 
                   height: '100%',
@@ -129,11 +113,11 @@ const ProjectView: React.FC = () => {
               >
                 <CardActionArea 
                   sx={{ height: '100%' }}
-                  onClick={() => navigate(`/projects/${projectId}/workspaces/${workspace.id}`)}
+                  onClick={() => navigate(`/projects/${project.id}`)}
                 >
                   <CardContent sx={{ p: 3 }}>
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <AccountTreeIcon sx={{ 
+                      <FolderIcon sx={{ 
                         fontSize: 32, 
                         color: 'primary.main', 
                         mr: 2,
@@ -146,10 +130,10 @@ const ProjectView: React.FC = () => {
                           fontWeight: 600,
                           mb: 0.5
                         }}>
-                          {workspace.name}
+                          {project.name}
                         </Typography>
                         <Chip 
-                          label={workspace.status} 
+                          label={project.status} 
                           size="small"
                           color="success"
                           sx={{ 
@@ -166,7 +150,7 @@ const ProjectView: React.FC = () => {
                       color="text.secondary"
                       sx={{ mb: 2 }}
                     >
-                      {workspace.description}
+                      {project.description}
                     </Typography>
 
                     <Stack 
@@ -180,23 +164,23 @@ const ProjectView: React.FC = () => {
                       }}
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <PlayCircleOutlineIcon sx={{ 
+                        <GroupIcon sx={{ 
                           fontSize: 16, 
                           color: 'text.secondary',
                           mr: 0.5 
                         }} />
                         <Typography variant="body2" color="text.secondary">
-                          {workspace.loci} loci
+                          {project.workspaces} workspaces
                         </Typography>
                       </Box>
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <ScheduleIcon sx={{ 
+                        <CalendarTodayIcon sx={{ 
                           fontSize: 16, 
                           color: 'text.secondary',
                           mr: 0.5 
                         }} />
                         <Typography variant="body2" color="text.secondary">
-                          Updated: {workspace.lastUpdated}
+                          Updated: {project.lastUpdated}
                         </Typography>
                       </Box>
                     </Stack>
@@ -211,4 +195,4 @@ const ProjectView: React.FC = () => {
   );
 };
 
-export default ProjectView; 
+export default Projects; 
