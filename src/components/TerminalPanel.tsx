@@ -4,9 +4,13 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import { styled, alpha } from '@mui/material/styles';
 
-const Panel = styled(Paper)(({ theme }) => ({
+interface PanelProps {
+  isSidebarCollapsed: boolean;
+}
+
+const Panel = styled(Paper)<PanelProps>(({ theme, isSidebarCollapsed }) => ({
   position: 'fixed',
-  left: 0,
+  left: isSidebarCollapsed ? '45px' : '240px',
   right: 0,
   bottom: 0,
   height: '300px',
@@ -110,10 +114,11 @@ const CommandText = styled(Typography)(({ theme }) => ({
 
 interface TerminalPanelProps {
   title: string;
+  isSidebarCollapsed?: boolean;
 }
 
-const TerminalPanel: React.FC<TerminalPanelProps> = ({ title }) => {
-  const [isExpanded, setIsExpanded] = useState(false);
+const TerminalPanel: React.FC<TerminalPanelProps> = ({ title, isSidebarCollapsed = false }) => {
+  const [isCollapsed, setIsCollapsed] = useState(false);
   const [height, setHeight] = useState(300);
   const [isDragging, setIsDragging] = useState(false);
   const startY = useRef(0);
@@ -221,30 +226,32 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({ title }) => {
   };
 
   return (
-    <Panel
-      elevation={0}
-      sx={{
-        transform: isExpanded ? 'translateY(0)' : 'translateY(calc(100% - 40px))',
-        height: isExpanded ? `${height}px` : '40px',
+    <Panel 
+      isSidebarCollapsed={isSidebarCollapsed}
+      sx={{ 
+        height: `${height}px`,
+        transform: isCollapsed ? 'translateY(calc(100% - 40px))' : 'translateY(0)',
+        transition: 'transform 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
       }}
     >
-      <Header onMouseDown={handleMouseDown}>
-        <Title variant="subtitle2">{title}</Title>
+      <Header 
+        onMouseDown={handleMouseDown}
+        sx={{
+          cursor: isDragging ? 'ns-resize' : 'pointer',
+        }}
+      >
+        <Title>{title}</Title>
         <ArrowContainer>
-          <IconButton 
-            size="small" 
-            onClick={() => setIsExpanded(!isExpanded)}
+          <IconButton
+            size="small"
+            onClick={() => setIsCollapsed(!isCollapsed)}
             sx={{ 
-              color: 'common.white',
-              padding: '6px',
-              transition: 'all 0.2s ease-in-out',
-              '&:hover': {
-                color: 'primary.main',
-                transform: 'translateY(-1px)',
-              }
+              color: 'text.secondary',
+              transition: 'transform 0.2s ease',
+              transform: isCollapsed ? 'rotate(180deg)' : 'none'
             }}
           >
-            {isExpanded ? <KeyboardArrowDownIcon /> : <KeyboardArrowUpIcon />}
+            {isCollapsed ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
           </IconButton>
         </ArrowContainer>
       </Header>

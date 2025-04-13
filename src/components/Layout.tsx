@@ -107,11 +107,11 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       
       {/* Terminal Panel based on route */}
       {isWorkflowEditor ? (
-        <TerminalPanel title="Workflow Terminal" />
+        <TerminalPanel title="Workflow Terminal" isSidebarCollapsed={isSidebarCollapsed} />
       ) : isProjectView ? (
-        <TerminalPanel title="Project Terminal" />
+        <TerminalPanel title="Project Terminal" isSidebarCollapsed={isSidebarCollapsed} />
       ) : (
-        <TerminalPanel title="Global Terminal" />
+        <TerminalPanel title="Global Terminal" isSidebarCollapsed={isSidebarCollapsed} />
       )}
 
       {/* Side Panel */}
