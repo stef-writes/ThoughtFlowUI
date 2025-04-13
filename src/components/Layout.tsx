@@ -3,7 +3,6 @@ import { Box, Typography, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import TerminalPanel from './TerminalPanel';
-import SidePanel from './SidePanel';
 import NavigationSidebar from './NavigationSidebar';
 
 interface LayoutProps {
@@ -113,9 +112,6 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       ) : (
         <TerminalPanel title="Global Terminal" isSidebarCollapsed={isSidebarCollapsed} />
       )}
-
-      {/* Side Panel */}
-      <SidePanel />
     </Box>
   );
 };
