@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { Box, IconButton, Typography, List, ListItem, ListItemIcon, ListItemText, Tooltip, Collapse } from '@mui/material';
+import React, { useState, useRef, useEffect } from 'react';
+import { Box, IconButton, Typography, List, ListItem, ListItemIcon, ListItemText, Tooltip, Collapse, useTheme } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
@@ -173,13 +173,37 @@ const NestedNavItem = styled(ListItem)<{ depth?: number; active?: boolean }>(({ 
   padding: theme.spacing(0.5, 1),
   paddingLeft: theme.spacing(1 + (depth * 2)),
   cursor: 'pointer',
+  position: 'relative',
+  transition: 'all 0.2s ease',
   '&:hover': {
     backgroundColor: alpha(theme.palette.action.hover, 0.7),
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      left: theme.spacing(1 + (depth * 2)),
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: '2px',
+      height: '60%',
+      backgroundColor: theme.palette.primary.main,
+      borderRadius: '1px',
+    }
   },
   ...(active && {
     backgroundColor: alpha(theme.palette.primary.main, 0.08),
     '&:hover': {
       backgroundColor: alpha(theme.palette.primary.main, 0.12),
+    },
+    '&::before': {
+      content: '""',
+      position: 'absolute',
+      left: theme.spacing(1 + (depth * 2)),
+      top: '50%',
+      transform: 'translateY(-50%)',
+      width: '2px',
+      height: '60%',
+      backgroundColor: theme.palette.primary.main,
+      borderRadius: '1px',
     }
   })
 }));
@@ -187,8 +211,11 @@ const NestedNavItem = styled(ListItem)<{ depth?: number; active?: boolean }>(({ 
 const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ onToggle }) => {
   const [isCollapsed, setIsCollapsed] = useState(true);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
+  const [focusedItem, setFocusedItem] = useState<string | null>(null);
   const location = useLocation();
   const navigate = useNavigate();
+  const theme = useTheme();
+  const listRef = useRef<HTMLUListElement>(null);
 
   const handleToggle = () => {
     setIsCollapsed(!isCollapsed);
@@ -205,115 +232,230 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ onToggle }) => {
 
   const isItemExpanded = (itemId: string) => expandedItems.includes(itemId);
 
-  const renderScriptChain = (scriptChain: ScriptChainItem, projectId: string, workspaceId: string, lociId: string, depth: number) => (
-    <NestedNavItem
-      key={scriptChain.id}
-      depth={depth}
-      onClick={() => navigate(`/projects/${projectId}/workspaces/${workspaceId}/loci/${lociId}/scriptchains/${scriptChain.id}`)}
-      active={location.pathname.includes(`/scriptchains/${scriptChain.id}`)}
-    >
-      <ListItemIcon sx={{ minWidth: 32, color: 'text.secondary' }}>
-        <AccountTreeIcon sx={{ fontSize: 18 }} />
-      </ListItemIcon>
-      <ListItemText 
-        primary={scriptChain.name}
-        primaryTypographyProps={{
-          fontSize: '14px',
-          fontWeight: 400,
-          noWrap: true
-        }}
-      />
-    </NestedNavItem>
-  );
+  const handleKeyDown = (e: React.KeyboardEvent, itemId: string, type: 'project' | 'workspace' | 'loci' | 'scriptchain') => {
+    if (!listRef.current) return;
 
-  const renderLoci = (loci: LociItem, projectId: string, workspaceId: string, depth: number) => (
-    <React.Fragment key={loci.id}>
+    const items = Array.from(listRef.current.querySelectorAll('[role="menuitem"]'));
+    const currentIndex = items.findIndex(item => item.id === itemId);
+
+    switch (e.key) {
+      case 'ArrowDown':
+        e.preventDefault();
+        if (currentIndex < items.length - 1) {
+          (items[currentIndex + 1] as HTMLElement).focus();
+        }
+        break;
+      case 'ArrowUp':
+        e.preventDefault();
+        if (currentIndex > 0) {
+          (items[currentIndex - 1] as HTMLElement).focus();
+        }
+        break;
+      case 'ArrowRight':
+        e.preventDefault();
+        if (type !== 'scriptchain' && !expandedItems.includes(itemId)) {
+          handleItemClick(itemId);
+        }
+        break;
+      case 'ArrowLeft':
+        e.preventDefault();
+        if (type !== 'scriptchain' && expandedItems.includes(itemId)) {
+          handleItemClick(itemId);
+        }
+        break;
+      case 'Enter':
+      case ' ':
+        e.preventDefault();
+        if (type === 'scriptchain') {
+          const path = `/projects/${itemId.split('-')[0]}/workspaces/${itemId.split('-')[1]}/loci/${itemId.split('-')[2]}/scriptchains/${itemId.split('-')[3]}`;
+          navigate(path);
+        } else {
+          handleItemClick(itemId);
+        }
+        break;
+    }
+  };
+
+  const renderScriptChain = (scriptChain: ScriptChainItem, projectId: string, workspaceId: string, lociId: string, depth: number) => {
+    const itemId = `${projectId}-${workspaceId}-${lociId}-${scriptChain.id}`;
+    return (
       <NestedNavItem
+        key={scriptChain.id}
         depth={depth}
-        onClick={() => handleItemClick(loci.id)}
-        active={location.pathname.includes(`/loci/${loci.id}`)}
+        onClick={() => navigate(`/projects/${projectId}/workspaces/${workspaceId}/loci/${lociId}/scriptchains/${scriptChain.id}`)}
+        active={location.pathname.includes(`/scriptchains/${scriptChain.id}`)}
+        role="menuitem"
+        id={itemId}
+        tabIndex={0}
+        onKeyDown={(e) => handleKeyDown(e, itemId, 'scriptchain')}
+        onFocus={() => setFocusedItem(itemId)}
+        onBlur={() => setFocusedItem(null)}
       >
         <ListItemIcon sx={{ minWidth: 32, color: 'text.secondary' }}>
-          {isItemExpanded(loci.id) ? (
-            <ExpandMoreIcon sx={{ fontSize: 18 }} />
-          ) : (
-            <ChevronRightIcon sx={{ fontSize: 18 }} />
-          )}
+          <AccountTreeIcon sx={{ fontSize: 18 }} />
         </ListItemIcon>
-        <ListItemText 
-          primary={loci.name}
-          primaryTypographyProps={{
-            fontSize: '14px',
-            fontWeight: 400,
-            noWrap: true
-          }}
-        />
+        <Tooltip title={scriptChain.name} placement="right" arrow>
+          <ListItemText 
+            primary={scriptChain.name}
+            primaryTypographyProps={{
+              fontSize: '14px',
+              fontWeight: 400,
+              noWrap: true
+            }}
+          />
+        </Tooltip>
       </NestedNavItem>
-      <Collapse in={isItemExpanded(loci.id)}>
-        {loci.scriptChains.map(scriptChain => 
-          renderScriptChain(scriptChain, projectId, workspaceId, loci.id, depth + 1)
-        )}
-      </Collapse>
-    </React.Fragment>
-  );
+    );
+  };
 
-  const renderWorkspace = (workspace: WorkspaceItem, projectId: string, depth: number) => (
-    <React.Fragment key={workspace.id}>
-      <NestedNavItem
-        depth={depth}
-        onClick={() => handleItemClick(workspace.id)}
-        active={location.pathname.includes(`/workspaces/${workspace.id}`)}
-      >
-        <ListItemIcon sx={{ minWidth: 32, color: 'text.secondary' }}>
-          {isItemExpanded(workspace.id) ? (
-            <ExpandMoreIcon sx={{ fontSize: 18 }} />
-          ) : (
-            <ChevronRightIcon sx={{ fontSize: 18 }} />
-          )}
-        </ListItemIcon>
-        <ListItemText 
-          primary={workspace.name}
-          primaryTypographyProps={{
-            fontSize: '14px',
-            fontWeight: 400,
-            noWrap: true
+  const renderLoci = (loci: LociItem, projectId: string, workspaceId: string, depth: number) => {
+    const itemId = `${projectId}-${workspaceId}-${loci.id}`;
+    return (
+      <React.Fragment key={loci.id}>
+        <NestedNavItem
+          depth={depth}
+          onClick={() => handleItemClick(loci.id)}
+          active={location.pathname.includes(`/loci/${loci.id}`)}
+          role="menuitem"
+          id={itemId}
+          tabIndex={0}
+          onKeyDown={(e) => handleKeyDown(e, itemId, 'loci')}
+          onFocus={() => setFocusedItem(itemId)}
+          onBlur={() => setFocusedItem(null)}
+        >
+          <ListItemIcon sx={{ minWidth: 32, color: 'text.secondary' }}>
+            {isItemExpanded(loci.id) ? (
+              <ExpandMoreIcon sx={{ fontSize: 18, transition: 'transform 0.2s ease' }} />
+            ) : (
+              <ChevronRightIcon sx={{ fontSize: 18, transition: 'transform 0.2s ease' }} />
+            )}
+          </ListItemIcon>
+          <Tooltip title={loci.name} placement="right" arrow>
+            <ListItemText 
+              primary={loci.name}
+              primaryTypographyProps={{
+                fontSize: '14px',
+                fontWeight: 400,
+                noWrap: true
+              }}
+            />
+          </Tooltip>
+        </NestedNavItem>
+        <Collapse 
+          in={isItemExpanded(loci.id)} 
+          timeout="auto" 
+          unmountOnExit
+          sx={{
+            '& .MuiCollapse-wrapper': {
+              transition: 'all 0.2s ease',
+            }
           }}
-        />
-      </NestedNavItem>
-      <Collapse in={isItemExpanded(workspace.id)}>
-        {workspace.loci.map(loci => renderLoci(loci, projectId, workspace.id, depth + 1))}
-      </Collapse>
-    </React.Fragment>
-  );
+        >
+          {loci.scriptChains.map(scriptChain => 
+            renderScriptChain(scriptChain, projectId, workspaceId, loci.id, depth + 1)
+          )}
+        </Collapse>
+      </React.Fragment>
+    );
+  };
 
-  const renderProject = (project: ProjectItem, depth: number) => (
-    <React.Fragment key={project.id}>
-      <NestedNavItem
-        depth={depth}
-        onClick={() => handleItemClick(project.id)}
-        active={location.pathname.includes(`/projects/${project.id}`)}
-      >
-        <ListItemIcon sx={{ minWidth: 32, color: 'text.secondary' }}>
-          {isItemExpanded(project.id) ? (
-            <ExpandMoreIcon sx={{ fontSize: 18 }} />
-          ) : (
-            <ChevronRightIcon sx={{ fontSize: 18 }} />
-          )}
-        </ListItemIcon>
-        <ListItemText 
-          primary={project.name}
-          primaryTypographyProps={{
-            fontSize: '14px',
-            fontWeight: 500,
-            noWrap: true
+  const renderWorkspace = (workspace: WorkspaceItem, projectId: string, depth: number) => {
+    const itemId = `${projectId}-${workspace.id}`;
+    return (
+      <React.Fragment key={workspace.id}>
+        <NestedNavItem
+          depth={depth}
+          onClick={() => handleItemClick(workspace.id)}
+          active={location.pathname.includes(`/workspaces/${workspace.id}`)}
+          role="menuitem"
+          id={itemId}
+          tabIndex={0}
+          onKeyDown={(e) => handleKeyDown(e, itemId, 'workspace')}
+          onFocus={() => setFocusedItem(itemId)}
+          onBlur={() => setFocusedItem(null)}
+        >
+          <ListItemIcon sx={{ minWidth: 32, color: 'text.secondary' }}>
+            {isItemExpanded(workspace.id) ? (
+              <ExpandMoreIcon sx={{ fontSize: 18, transition: 'transform 0.2s ease' }} />
+            ) : (
+              <ChevronRightIcon sx={{ fontSize: 18, transition: 'transform 0.2s ease' }} />
+            )}
+          </ListItemIcon>
+          <Tooltip title={workspace.name} placement="right" arrow>
+            <ListItemText 
+              primary={workspace.name}
+              primaryTypographyProps={{
+                fontSize: '14px',
+                fontWeight: 400,
+                noWrap: true
+              }}
+            />
+          </Tooltip>
+        </NestedNavItem>
+        <Collapse 
+          in={isItemExpanded(workspace.id)} 
+          timeout="auto" 
+          unmountOnExit
+          sx={{
+            '& .MuiCollapse-wrapper': {
+              transition: 'all 0.2s ease',
+            }
           }}
-        />
-      </NestedNavItem>
-      <Collapse in={isItemExpanded(project.id)}>
-        {project.workspaces.map(workspace => renderWorkspace(workspace, project.id, depth + 1))}
-      </Collapse>
-    </React.Fragment>
-  );
+        >
+          {workspace.loci.map(loci => renderLoci(loci, projectId, workspace.id, depth + 1))}
+        </Collapse>
+      </React.Fragment>
+    );
+  };
+
+  const renderProject = (project: ProjectItem, depth: number) => {
+    const itemId = project.id;
+    return (
+      <React.Fragment key={project.id}>
+        <NestedNavItem
+          depth={depth}
+          onClick={() => handleItemClick(project.id)}
+          active={location.pathname.includes(`/projects/${project.id}`)}
+          role="menuitem"
+          id={itemId}
+          tabIndex={0}
+          onKeyDown={(e) => handleKeyDown(e, itemId, 'project')}
+          onFocus={() => setFocusedItem(itemId)}
+          onBlur={() => setFocusedItem(null)}
+        >
+          <ListItemIcon sx={{ minWidth: 32, color: 'text.secondary' }}>
+            {isItemExpanded(project.id) ? (
+              <ExpandMoreIcon sx={{ fontSize: 18, transition: 'transform 0.2s ease' }} />
+            ) : (
+              <ChevronRightIcon sx={{ fontSize: 18, transition: 'transform 0.2s ease' }} />
+            )}
+          </ListItemIcon>
+          <Tooltip title={project.name} placement="right" arrow>
+            <ListItemText 
+              primary={project.name}
+              primaryTypographyProps={{
+                fontSize: '14px',
+                fontWeight: 500,
+                noWrap: true
+              }}
+            />
+          </Tooltip>
+        </NestedNavItem>
+        <Collapse 
+          in={isItemExpanded(project.id)} 
+          timeout="auto" 
+          unmountOnExit
+          sx={{
+            '& .MuiCollapse-wrapper': {
+              transition: 'all 0.2s ease',
+            }
+          }}
+        >
+          {project.workspaces.map(workspace => renderWorkspace(workspace, project.id, depth + 1))}
+        </Collapse>
+      </React.Fragment>
+    );
+  };
 
   return (
     <>
@@ -351,8 +493,13 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ onToggle }) => {
           </Typography>
         </TopSection>
 
-        <NavigationList>
-          <NavItem active={location.pathname === '/'}>
+        <NavigationList ref={listRef} role="menu">
+          <NavItem 
+            active={location.pathname === '/'}
+            role="menuitem"
+            tabIndex={0}
+            onKeyDown={(e) => handleKeyDown(e, 'home', 'project')}
+          >
             <ListItemIcon sx={{ color: 'text.secondary', minWidth: 32 }}>
               <HomeIcon sx={{ fontSize: 20 }} />
             </ListItemIcon>
@@ -367,7 +514,11 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ onToggle }) => {
 
           {mockProjects.map(project => renderProject(project, 0))}
 
-          <NavItem>
+          <NavItem
+            role="menuitem"
+            tabIndex={0}
+            onKeyDown={(e) => handleKeyDown(e, 'search', 'project')}
+          >
             <ListItemIcon sx={{ color: 'text.secondary', minWidth: 32 }}>
               <SearchIcon sx={{ fontSize: 20 }} />
             </ListItemIcon>
@@ -380,7 +531,11 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ onToggle }) => {
             />
           </NavItem>
 
-          <NavItem>
+          <NavItem
+            role="menuitem"
+            tabIndex={0}
+            onKeyDown={(e) => handleKeyDown(e, 'settings', 'project')}
+          >
             <ListItemIcon sx={{ color: 'text.secondary', minWidth: 32 }}>
               <SettingsIcon sx={{ fontSize: 20 }} />
             </ListItemIcon>

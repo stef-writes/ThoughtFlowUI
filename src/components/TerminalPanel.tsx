@@ -10,7 +10,7 @@ interface PanelProps {
 
 const Panel = styled(Paper)<PanelProps>(({ theme, isSidebarCollapsed }) => ({
   position: 'fixed',
-  left: isSidebarCollapsed ? '45px' : '240px',
+  left: 0,
   right: 0,
   bottom: 0,
   height: '300px',
@@ -21,6 +21,7 @@ const Panel = styled(Paper)<PanelProps>(({ theme, isSidebarCollapsed }) => ({
   transition: 'all 0.3s cubic-bezier(0.4, 0, 0.2, 1)',
   borderTop: `1px solid ${alpha(theme.palette.grey[700], 0.3)}`,
   boxShadow: `0 -1px 0 ${alpha(theme.palette.grey[700], 0.1)}`,
+  zIndex: 1300,
 }));
 
 const Header = styled(Box)(({ theme }) => ({
