@@ -1,10 +1,10 @@
-import React from 'react';
-import { Box, AppBar, Toolbar, Typography, IconButton, useTheme } from '@mui/material';
-import MenuIcon from '@mui/icons-material/Menu';
+import React, { useState } from 'react';
+import { Box, Typography, useTheme } from '@mui/material';
 import { motion } from 'framer-motion';
 import { useLocation } from 'react-router-dom';
 import TerminalPanel from './TerminalPanel';
 import SidePanel from './SidePanel';
+import NavigationSidebar from './NavigationSidebar';
 
 interface LayoutProps {
   children: React.ReactNode;
@@ -15,6 +15,10 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
   const location = useLocation();
   const isWorkflowEditor = location.pathname.includes('/workflows/');
   const isProjectView = location.pathname.includes('/projects/');
+  const [isSidebarCollapsed, setIsSidebarCollapsed] = useState(false);
+
+  // Extract path segments for breadcrumb
+  const pathSegments = location.pathname.split('/').filter(Boolean);
 
   return (
     <Box sx={{ 
@@ -23,58 +27,61 @@ const Layout: React.FC<LayoutProps> = ({ children }) => {
       minHeight: '100vh',
       backgroundColor: theme.palette.background.default,
     }}>
-      <AppBar 
-        position="static" 
-        elevation={0}
-        sx={{ 
-          backgroundColor: '#1A1A1A',
-          backgroundImage: 'none',
+      <NavigationSidebar onToggle={() => setIsSidebarCollapsed(!isSidebarCollapsed)} />
+      
+      {/* Notion-style header */}
+      <Box
+        sx={{
+          ml: isSidebarCollapsed ? '60px' : '240px',
+          height: '45px',
+          display: 'flex',
+          alignItems: 'center',
+          px: 2,
           borderBottom: `1px solid ${theme.palette.divider}`,
+          backgroundColor: theme.palette.background.default,
         }}
       >
-        <Toolbar sx={{ 
-          justifyContent: 'space-between',
-          padding: theme.spacing(2, 3),
-          backgroundColor: '#1A1A1A',
-          backdropFilter: 'none',
-        }}>
-          <motion.div
-            initial={{ opacity: 0, x: -20 }}
-            animate={{ opacity: 1, x: 0 }}
-            transition={{ duration: 0.5 }}
-          >
-            <Typography 
-              variant="h6" 
-              component="div" 
-              sx={{ 
-                fontWeight: 700,
-                letterSpacing: '-0.025em',
-                color: theme.palette.primary.main,
-              }}
-            >
-              ThoughtfulUI
-            </Typography>
-          </motion.div>
-          <IconButton
-            edge="end"
-            color="inherit"
-            aria-label="menu"
-            sx={{ 
-              color: theme.palette.primary.main,
+        <Typography
+          sx={{
+            display: 'flex',
+            alignItems: 'center',
+            gap: 1,
+            color: theme.palette.text.secondary,
+            fontSize: '14px',
+            '& .segment': {
+              color: theme.palette.text.primary,
+              cursor: 'pointer',
+              textTransform: 'capitalize',
               '&:hover': {
                 backgroundColor: theme.palette.action.hover,
+                borderRadius: 1
               }
-            }}
-          >
-            <MenuIcon />
-          </IconButton>
-        </Toolbar>
-      </AppBar>
+            }
+          }}
+        >
+          {pathSegments.length > 0 ? (
+            pathSegments.map((segment, index) => (
+              <React.Fragment key={segment}>
+                <Box component="span" className="segment">
+                  {segment}
+                </Box>
+                {index < pathSegments.length - 1 && " / "}
+              </React.Fragment>
+            ))
+          ) : (
+            <Box component="span" className="segment">
+              Home
+            </Box>
+          )}
+        </Typography>
+      </Box>
+
       <Box 
         component="main" 
         sx={{ 
           flexGrow: 1,
           position: 'relative',
+          ml: isSidebarCollapsed ? '60px' : '240px',
           ...(isWorkflowEditor ? {
             padding: 0,
             maxWidth: '100%',
