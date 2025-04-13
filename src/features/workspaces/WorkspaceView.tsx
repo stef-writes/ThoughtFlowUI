@@ -12,6 +12,8 @@ import {
   Link,
   Chip,
   Stack,
+  alpha,
+  useTheme
 } from '@mui/material';
 import { useNavigate, useParams, Link as RouterLink } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
@@ -51,6 +53,7 @@ const mockLoci = [
 const WorkspaceView: React.FC = () => {
   const navigate = useNavigate();
   const { projectId, workspaceId } = useParams();
+  const theme = useTheme();
 
   // Mock workspace data
   const workspace = {
@@ -89,6 +92,26 @@ const WorkspaceView: React.FC = () => {
           </Link>
           <Typography color="text.primary">{workspace.name}</Typography>
         </Breadcrumbs>
+
+        {/* Description Section */}
+        <Box 
+          sx={{ 
+            mb: 4,
+            p: 3,
+            borderRadius: 2,
+            backgroundColor: alpha(theme.palette.background.paper, 0.6),
+            border: `1px solid ${theme.palette.divider}`,
+          }}
+        >
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 500 }}>
+            Workspace Loci
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: '800px' }}>
+            Loci are specific focus areas within your workspace where you can create and manage script chains. 
+            Each locus represents a distinct component or feature of your workflow. Use loci to organize related 
+            script chains and maintain a clear structure for your automation processes.
+          </Typography>
+        </Box>
 
         <Box sx={{ 
           display: 'flex', 

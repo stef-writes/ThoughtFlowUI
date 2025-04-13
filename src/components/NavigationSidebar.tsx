@@ -185,7 +185,7 @@ const NestedNavItem = styled(ListItem)<{ depth?: number; active?: boolean }>(({ 
 }));
 
 const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ onToggle }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [expandedItems, setExpandedItems] = useState<string[]>([]);
   const location = useLocation();
   const navigate = useNavigate();

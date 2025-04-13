@@ -12,6 +12,7 @@ import LociView from './features/loci/LociView';
 import WorkflowCanvas from './components/WorkflowCanvas';
 import WorkflowToolbar from './components/WorkflowToolbar';
 import AIFloatingAssistant from './components/AIFloatingAssistant';
+import HomePage from './pages/HomePage';
 
 const App: React.FC = () => {
   return (
@@ -21,7 +22,8 @@ const App: React.FC = () => {
         <ReactFlowProvider>
           <Layout>
             <Routes>
-              <Route path="/" element={<Projects />} />
+              <Route path="/" element={<HomePage />} />
+              <Route path="/projects" element={<Projects />} />
               <Route path="/projects/:projectId" element={<ProjectView />} />
               <Route path="/projects/:projectId/workspaces/:workspaceId" element={<WorkspaceView />} />
               <Route path="/projects/:projectId/workspaces/:workspaceId/loci/:lociId" element={<LociView />} />

@@ -12,6 +12,8 @@ import {
   Link,
   Chip,
   Stack,
+  alpha,
+  useTheme
 } from '@mui/material';
 import { useNavigate, useParams, Link as RouterLink } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
@@ -51,6 +53,7 @@ const mockScriptChains = [
 const LociView: React.FC = () => {
   const navigate = useNavigate();
   const { projectId, workspaceId, lociId } = useParams();
+  const theme = useTheme();
 
   // Mock loci data
   const loci = {
@@ -100,6 +103,26 @@ const LociView: React.FC = () => {
           </Link>
           <Typography color="text.primary">{loci.name}</Typography>
         </Breadcrumbs>
+
+        {/* Description Section */}
+        <Box 
+          sx={{ 
+            mb: 4,
+            p: 3,
+            borderRadius: 2,
+            backgroundColor: alpha(theme.palette.background.paper, 0.6),
+            border: `1px solid ${theme.palette.divider}`,
+          }}
+        >
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 500 }}>
+            Script Chains
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: '800px' }}>
+            Script chains are the core automation components in ThoughtFlow. Each chain is a sequence of connected nodes 
+            that process and transform data. Use script chains to create sophisticated workflows, integrate AI models, 
+            and automate complex tasks. Chain nodes together to build powerful, reusable automation sequences.
+          </Typography>
+        </Box>
 
         <Box sx={{ 
           display: 'flex', 

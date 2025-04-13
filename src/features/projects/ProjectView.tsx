@@ -12,6 +12,8 @@ import {
   Link,
   Chip,
   Stack,
+  alpha,
+  useTheme
 } from '@mui/material';
 import { useNavigate, useParams, Link as RouterLink } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
@@ -51,6 +53,7 @@ const mockWorkspaces = [
 const ProjectView: React.FC = () => {
   const navigate = useNavigate();
   const { projectId } = useParams();
+  const theme = useTheme();
 
   // Mock project data
   const project = {
@@ -78,6 +81,26 @@ const ProjectView: React.FC = () => {
           </Link>
           <Typography color="text.primary">{project.name}</Typography>
         </Breadcrumbs>
+
+        {/* Description Section */}
+        <Box 
+          sx={{ 
+            mb: 4,
+            p: 3,
+            borderRadius: 2,
+            backgroundColor: alpha(theme.palette.background.paper, 0.6),
+            border: `1px solid ${theme.palette.divider}`,
+          }}
+        >
+          <Typography variant="h5" gutterBottom sx={{ fontWeight: 500 }}>
+            Project Workspaces
+          </Typography>
+          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: '800px' }}>
+            Workspaces help you organize different aspects of your project. Each workspace can contain multiple loci, 
+            which are specific focus areas or components of your work. Use workspaces to group related features, 
+            user flows, or development phases together.
+          </Typography>
+        </Box>
 
         <Box sx={{ 
           display: 'flex', 

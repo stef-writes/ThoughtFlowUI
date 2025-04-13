@@ -118,7 +118,7 @@ interface TerminalPanelProps {
 }
 
 const TerminalPanel: React.FC<TerminalPanelProps> = ({ title, isSidebarCollapsed = false }) => {
-  const [isCollapsed, setIsCollapsed] = useState(false);
+  const [isCollapsed, setIsCollapsed] = useState(true);
   const [height, setHeight] = useState(300);
   const [isDragging, setIsDragging] = useState(false);
   const startY = useRef(0);
@@ -156,74 +156,33 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({ title, isSidebarCollapsed
     };
   }, [isDragging]);
 
-  const getTerminalContent = () => {
-    switch (title) {
-      case 'Project Terminal':
-        return (
-          <>
-            <span className="section"># Project Management</span>
-            <span className="command">project status</span>
-            <span className="comment"># Show project health metrics and resource usage</span>
-            <span className="command">project optimize</span>
-            <span className="comment"># Get AI recommendations for project improvements</span>
-            <span className="command">project analyze bottlenecks</span>
-            <span className="comment"># Identify and suggest fixes for performance issues</span>
+  const getTerminalContent = () => (
+    <>
+      <span className="section"># Navigation</span>
+      <span className="command">goto project &lt;project_name&gt;</span>
+      <span className="comment"># Navigate to a specific project</span>
+      <span className="command">goto workspace &lt;workspace_name&gt;</span>
+      <span className="comment"># Navigate to a specific workspace</span>
+      <span className="command">goto loci &lt;loci_name&gt;</span>
+      <span className="comment"># Navigate to a specific loci</span>
 
-            <span className="section"># Resource Management</span>
-            <span className="command">show memory usage</span>
-            <span className="comment"># Display memory usage across chains</span>
-            <span className="command">optimize for cost</span>
-            <span className="comment"># Get cost optimization recommendations</span>
-          </>
-        );
-      case 'Workflow Terminal':
-        return (
-          <>
-            <span className="section"># Node Operations</span>
-            <span className="command">analyze node &lt;node_id&gt;</span>
-            <span className="comment"># Get node performance and parameter analysis</span>
-            <span className="command">debug node &lt;node_id&gt;</span>
-            <span className="comment"># Start interactive node debugging session</span>
-            <span className="command">optimize node &lt;node_id&gt;</span>
-            <span className="comment"># Get AI suggestions for node parameters</span>
+      <span className="section"># Operations</span>
+      <span className="command">analyze &lt;node_id | chain_id&gt;</span>
+      <span className="comment"># Get performance and parameter analysis</span>
+      <span className="command">optimize &lt;node_id | chain_id&gt;</span>
+      <span className="comment"># Get AI suggestions for improvements</span>
+      <span className="command">debug &lt;node_id | chain_id&gt;</span>
+      <span className="comment"># Start interactive debugging session</span>
 
-            <span className="section"># Model Settings</span>
-            <span className="command">set model &lt;node_id&gt; &lt;model_name&gt;</span>
-            <span className="comment"># Change node's model (gpt-4, claude-3, etc)</span>
-            <span className="command">set temp &lt;node_id&gt; &lt;value&gt;</span>
-            <span className="comment"># Adjust temperature (0-2)</span>
-            <span className="command">set tokens &lt;node_id&gt; &lt;limit&gt;</span>
-            <span className="comment"># Set token limit</span>
-
-            <span className="section"># Content</span>
-            <span className="command">show input &lt;node_id&gt;</span>
-            <span className="comment"># Display node's current input</span>
-            <span className="command">show output &lt;node_id&gt;</span>
-            <span className="comment"># Display node's current output</span>
-            <span className="command">clear &lt;node_id&gt;</span>
-            <span className="comment"># Clear node's content</span>
-          </>
-        );
-      case 'Global Terminal':
-        return (
-          <>
-            <span className="section"># Workspace Intelligence</span>
-            <span className="command">find similar patterns</span>
-            <span className="comment"># Discover reusable patterns across chains</span>
-            <span className="command">sync chain settings</span>
-            <span className="comment"># Synchronize settings across related chains</span>
-
-            <span className="section"># Cross-Chain Operations</span>
-            <span className="command">analyze bottlenecks</span>
-            <span className="comment"># Identify performance issues across chains</span>
-            <span className="command">suggest improvements</span>
-            <span className="comment"># Get AI recommendations for workflow optimization</span>
-          </>
-        );
-      default:
-        return null;
-    }
-  };
+      <span className="section"># System</span>
+      <span className="command">show memory</span>
+      <span className="comment"># Display memory usage</span>
+      <span className="command">show status</span>
+      <span className="comment"># Show system health and metrics</span>
+      <span className="command">clear</span>
+      <span className="comment"># Clear terminal output</span>
+    </>
+  );
 
   return (
     <Panel 
