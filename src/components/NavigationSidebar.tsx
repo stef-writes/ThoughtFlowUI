@@ -120,54 +120,26 @@ interface ScriptChainItem {
 const mockProjects: ProjectItem[] = [
   {
     id: '1',
-    name: 'FinTech',
+    name: 'Authentication System',
     workspaces: [
       {
         id: '1',
-        name: 'Macro Economics',
+        name: 'User Flow',
         loci: [
           {
             id: '1',
-            name: 'Market Analysis',
+            name: 'Login Process',
             scriptChains: [
-              { id: '1', name: 'Trend Analysis' },
-              { id: '2', name: 'Forecasting' }
+              { id: '1', name: 'Validation Chain' },
+              { id: '2', name: 'Token Generation' }
             ]
           },
           {
             id: '2',
-            name: 'Economic Indicators',
+            name: 'Registration',
             scriptChains: [
-              { id: '3', name: 'Data Collection' },
-              { id: '4', name: 'Analysis Chain' }
-            ]
-          }
-        ]
-      },
-      {
-        id: '2',
-        name: 'Cryptocurrency',
-        loci: [
-          {
-            id: '3',
-            name: 'Trading Analysis',
-            scriptChains: [
-              { id: '5', name: 'Price Tracking' },
-              { id: '6', name: 'Pattern Recognition' }
-            ]
-          }
-        ]
-      },
-      {
-        id: '3',
-        name: 'Personal Finance',
-        loci: [
-          {
-            id: '4',
-            name: 'Budgeting',
-            scriptChains: [
-              { id: '7', name: 'Expense Tracking' },
-              { id: '8', name: 'Financial Planning' }
+              { id: '3', name: 'User Creation' },
+              { id: '4', name: 'Welcome Email' }
             ]
           }
         ]
@@ -176,58 +148,18 @@ const mockProjects: ProjectItem[] = [
   },
   {
     id: '2',
-    name: 'Real Estate',
+    name: 'Data Processing',
     workspaces: [
       {
         id: '2',
-        name: 'Property Management',
+        name: 'ETL Pipeline',
         loci: [
           {
             id: '3',
-            name: 'Listing Management',
+            name: 'Data Transformation',
             scriptChains: [
-              { id: '5', name: 'Data Collection' },
+              { id: '5', name: 'Cleanup Chain' },
               { id: '6', name: 'Validation Chain' }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: '3',
-    name: 'BioMetrics',
-    workspaces: [
-      {
-        id: '3',
-        name: 'Authentication',
-        loci: [
-          {
-            id: '4',
-            name: 'Face Recognition',
-            scriptChains: [
-              { id: '7', name: 'Image Processing' },
-              { id: '8', name: 'Matching Chain' }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: '4',
-    name: 'EdTech',
-    workspaces: [
-      {
-        id: '4',
-        name: 'Learning Platform',
-        loci: [
-          {
-            id: '5',
-            name: 'Content Delivery',
-            scriptChains: [
-              { id: '9', name: 'Adaptive Learning' },
-              { id: '10', name: 'Progress Tracking' }
             ]
           }
         ]

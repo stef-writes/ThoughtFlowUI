@@ -25,6 +25,15 @@ export interface NodeMetadata {
   presencePenalty?: number;
   model?: string;
   additionalInput?: string;
+  // Data Source Configuration
+  dataSource?: {
+    type: 'url' | 'api' | 'file' | 'manual' | 'none';
+    url?: string;
+    apiEndpoint?: string;
+    apiKey?: string;
+    file?: File;
+    manualInput?: string;
+  };
 }
 
 export interface WorkflowNode {

@@ -23,8 +23,8 @@ import CalendarTodayIcon from '@mui/icons-material/CalendarToday';
 const mockProjects = [
   {
     id: '1',
-    name: 'FinTech',
-    description: 'Financial technology and digital banking solutions',
+    name: 'Product Vision',
+    description: 'Product strategy, roadmap, and feature prioritization',
     workspaces: 3,
     teamSize: 8,
     lastUpdated: '2024-03-15',
@@ -32,8 +32,8 @@ const mockProjects = [
   },
   {
     id: '2',
-    name: 'Real Estate',
-    description: 'Property management and real estate analytics',
+    name: 'Technical Architecture',
+    description: 'System design, infrastructure, and technical decisions',
     workspaces: 3,
     teamSize: 6,
     lastUpdated: '2024-03-14',
@@ -41,8 +41,8 @@ const mockProjects = [
   },
   {
     id: '3',
-    name: 'BioMetrics',
-    description: 'Biometric authentication and identity verification',
+    name: 'User Experience',
+    description: 'User research, design thinking, and product feedback',
     workspaces: 3,
     teamSize: 12,
     lastUpdated: '2024-03-13',
@@ -50,20 +50,11 @@ const mockProjects = [
   },
   {
     id: '4',
-    name: 'EdTech',
-    description: 'Educational technology and learning platforms',
+    name: 'Growth Strategy',
+    description: 'Marketing, growth hacking, and user acquisition',
     workspaces: 3,
     teamSize: 6,
     lastUpdated: '2024-03-12',
-    status: 'active',
-  },
-  {
-    id: '5',
-    name: 'Creative',
-    description: 'Creative content and media production',
-    workspaces: 3,
-    teamSize: 8,
-    lastUpdated: '2024-03-11',
     status: 'active',
   },
 ];

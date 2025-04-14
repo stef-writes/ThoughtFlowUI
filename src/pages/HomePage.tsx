@@ -26,21 +26,21 @@ const HomePage: React.FC = () => {
     {
       id: '1',
       type: 'project',
-      name: 'FinTech',
+      name: 'Authentication System',
       lastModified: '2 hours ago',
       path: '/projects/1'
     },
     {
       id: '2',
       type: 'workspace',
-      name: 'Payment Processing',
+      name: 'User Flow',
       lastModified: '3 hours ago',
       path: '/projects/1/workspaces/1'
     },
     {
       id: '3',
       type: 'scriptchain',
-      name: 'Transaction Flow',
+      name: 'Login Process',
       lastModified: '4 hours ago',
       path: '/projects/1/workspaces/1/scriptchains/1'
     }
