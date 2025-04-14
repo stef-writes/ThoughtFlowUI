@@ -5,14 +5,13 @@ import { ReactFlowProvider } from 'reactflow';
 import 'reactflow/dist/style.css';
 import theme from './theme';
 import Layout from './components/Layout';
-import Projects from './features/global/Projects';
+import HomePage from './pages/HomePage';
 import ProjectView from './features/projects/ProjectView';
 import WorkspaceView from './features/workspaces/WorkspaceView';
-import WorkflowCanvas from './components/WorkflowCanvas';
 import WorkflowToolbar from './components/WorkflowToolbar';
-import AIFloatingAssistant from './components/AIFloatingAssistant';
-import HomePage from './pages/HomePage';
+import WorkflowCanvas from './components/WorkflowCanvas';
 import PublishingPage from './pages/PublishingPage';
+import AIFloatingAssistant from './components/AIFloatingAssistant';
 
 const App: React.FC = () => {
   return (
@@ -23,7 +22,6 @@ const App: React.FC = () => {
           <Layout>
             <Routes>
               <Route path="/" element={<HomePage />} />
-              <Route path="/projects" element={<Projects />} />
               <Route path="/projects/:projectId" element={<ProjectView />} />
               <Route path="/projects/:projectId/workspaces/:workspaceId" element={<WorkspaceView />} />
               <Route path="/publishing" element={<PublishingPage />} />
