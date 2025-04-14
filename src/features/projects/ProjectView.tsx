@@ -34,10 +34,10 @@ interface Workspace {
 const mockWorkspaces: Workspace[] = [
   {
     id: '1',
-    name: 'Market Analysis',
-    description: 'Market research, competitor analysis, and strategic insights',
+    name: 'Real Estate Marketing',
+    description: 'Generates marketing content for property listings based on Zillow and Census data.',
     scriptchains: 1,
-    lastUpdated: '2024-04-14'
+    lastUpdated: new Date().toISOString().split('T')[0]
   }
 ];
 

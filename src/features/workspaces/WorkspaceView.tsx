@@ -35,10 +35,10 @@ interface ScriptChain {
 const initialScriptChains: ScriptChain[] = [
   {
     id: '1',
-    name: 'Strategic Market Analyzer',
-    description: 'Processes market research, competitor data, and customer feedback to generate strategic insights',
+    name: 'Real Estate Marketing Content Generator',
+    description: 'Generates property analysis, blog posts, and social media content from property & demographic data.',
     status: 'active',
-    lastUpdated: '2024-04-14'
+    lastUpdated: new Date().toISOString().split('T')[0]
   }
 ];
 
