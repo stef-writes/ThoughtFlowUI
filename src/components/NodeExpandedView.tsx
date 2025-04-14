@@ -48,25 +48,81 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
   const { updateNode, edges, nodes } = useWorkflowStore();
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [isZenMode, setIsZenMode] = React.useState(false);
+  
+  // Initialize nodeData state
   const [nodeData, setNodeData] = React.useState({
-    label: node?.data.label || '',
-    content: node?.data.content || '',
+    label: '',
+    content: '',
     selectedSources: [] as string[],
     metadata: {
-      created: node?.data.metadata?.created || new Date().toISOString(),
-      lastModified: node?.data.metadata?.lastModified || new Date().toISOString(),
+      created: new Date().toISOString(),
+      lastModified: new Date().toISOString(),
       template: '',
       inputs: [],
       context: '',
       tokenLimit: 2000,
       temperature: 0.7,
-      topP: node?.data.metadata?.topP || 1.0,
-      frequencyPenalty: node?.data.metadata?.frequencyPenalty || 0.0,
-      presencePenalty: node?.data.metadata?.presencePenalty || 0.0,
-      model: node?.data.metadata?.model || 'gpt-4',
-      version: node?.data.metadata?.version || 1,
+      topP: 1.0,
+      frequencyPenalty: 0.0,
+      presencePenalty: 0.0,
+      model: 'gpt-4',
+      version: 1,
+      additionalInput: '',
+      dataSource: { type: 'none' } as NodeMetadata['dataSource'], // Default data source
     } as NodeMetadata,
   });
+
+  // Effect to update state when node prop changes
+  React.useEffect(() => {
+    if (node) {
+      setNodeData({
+        label: node.data.label || '',
+        content: node.data.content || '',
+        selectedSources: node.data.selectedSources || [],
+        metadata: {
+          ...node.data.metadata,
+          created: node.data.metadata?.created || new Date().toISOString(),
+          lastModified: node.data.metadata?.lastModified || new Date().toISOString(),
+          template: node.data.metadata?.template || '',
+          inputs: node.data.metadata?.inputs || [],
+          context: node.data.metadata?.context || '',
+          tokenLimit: node.data.metadata?.tokenLimit || 2000,
+          temperature: node.data.metadata?.temperature || 0.7,
+          topP: node.data.metadata?.topP || 1.0,
+          frequencyPenalty: node.data.metadata?.frequencyPenalty || 0.0,
+          presencePenalty: node.data.metadata?.presencePenalty || 0.0,
+          model: node.data.metadata?.model || 'gpt-4',
+          version: node.data.metadata?.version || 1,
+          additionalInput: node.data.metadata?.additionalInput || '',
+          // Ensure dataSource is correctly populated from the node prop
+          dataSource: node.data.metadata?.dataSource || { type: 'none' },
+        }
+      });
+    } else {
+      // Reset state if node is null (e.g., view closed)
+      setNodeData({
+        label: '',
+        content: '',
+        selectedSources: [],
+        metadata: {
+          created: new Date().toISOString(),
+          lastModified: new Date().toISOString(),
+          template: '',
+          inputs: [],
+          context: '',
+          tokenLimit: 2000,
+          temperature: 0.7,
+          topP: 1.0,
+          frequencyPenalty: 0.0,
+          presencePenalty: 0.0,
+          model: 'gpt-4',
+          version: 1,
+          additionalInput: '',
+          dataSource: { type: 'none' },
+        } as NodeMetadata,
+      });
+    }
+  }, [node]);
 
   // Status colors
   const statusColors = {
@@ -94,30 +150,6 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
       };
     });
   }, [incomingConnections, node, nodes]);
-
-  React.useEffect(() => {
-    if (node) {
-      setNodeData({
-        label: node.data.label || '',
-        content: node.data.content || '',
-        selectedSources: node.data.selectedSources || [],
-        metadata: {
-          created: node.data.metadata?.created || new Date().toISOString(),
-          lastModified: node.data.metadata?.lastModified || new Date().toISOString(),
-          template: node.data.metadata?.template || '',
-          inputs: node.data.metadata?.inputs || [],
-          context: node.data.metadata?.context || '',
-          tokenLimit: node.data.metadata?.tokenLimit || 2000,
-          temperature: node.data.metadata?.temperature || 0.7,
-          topP: node.data.metadata?.topP || 1.0,
-          frequencyPenalty: node.data.metadata?.frequencyPenalty || 0.0,
-          presencePenalty: node.data.metadata?.presencePenalty || 0.0,
-          model: node.data.metadata?.model || 'gpt-4',
-          version: node.data.metadata?.version || 1,
-        },
-      });
-    }
-  }, [node]);
 
   const handleSave = () => {
     if (node) {
