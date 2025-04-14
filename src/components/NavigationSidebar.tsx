@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { Box, IconButton, Typography, List, ListItem, ListItemIcon, ListItemText, Tooltip, Collapse, useTheme } from '@mui/material';
+import { Box, IconButton, Typography, List, ListItem, ListItemIcon, ListItemText, Tooltip, Collapse, useTheme, Divider } from '@mui/material';
 import { styled, alpha } from '@mui/material/styles';
 import HomeIcon from '@mui/icons-material/Home';
 import SearchIcon from '@mui/icons-material/Search';
@@ -11,7 +11,9 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import WorkspacesIcon from '@mui/icons-material/Workspaces';
 import AccountTreeIcon from '@mui/icons-material/AccountTree';
 import PublishIcon from '@mui/icons-material/Publish';
+import HistoryIcon from '@mui/icons-material/History';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useLocalStorage } from '../hooks/useLocalStorage';
 
 const SIDEBAR_WIDTH = 240;
 const TRANSITION_DURATION = '0.2s';
@@ -102,13 +104,7 @@ interface ProjectItem {
 interface WorkspaceItem {
   id: string;
   name: string;
-  loci: LociItem[];
-}
-
-interface LociItem {
-  id: string;
-  name: string;
-  scriptChains: ScriptChainItem[];
+  scriptchains: ScriptChainItem[];
 }
 
 interface ScriptChainItem {
@@ -116,52 +112,24 @@ interface ScriptChainItem {
   name: string;
 }
 
+interface RecentWorkflow {
+  id: string;
+  name: string;
+  path: string;
+  timestamp: number;
+}
+
 // Mock data
 const mockProjects: ProjectItem[] = [
   {
     id: '1',
-    name: 'Authentication System',
+    name: 'Product Vision',
     workspaces: [
       {
         id: '1',
-        name: 'User Flow',
-        loci: [
-          {
-            id: '1',
-            name: 'Login Process',
-            scriptChains: [
-              { id: '1', name: 'Validation Chain' },
-              { id: '2', name: 'Token Generation' }
-            ]
-          },
-          {
-            id: '2',
-            name: 'Registration',
-            scriptChains: [
-              { id: '3', name: 'User Creation' },
-              { id: '4', name: 'Welcome Email' }
-            ]
-          }
-        ]
-      }
-    ]
-  },
-  {
-    id: '2',
-    name: 'Data Processing',
-    workspaces: [
-      {
-        id: '2',
-        name: 'ETL Pipeline',
-        loci: [
-          {
-            id: '3',
-            name: 'Data Transformation',
-            scriptChains: [
-              { id: '5', name: 'Cleanup Chain' },
-              { id: '6', name: 'Validation Chain' }
-            ]
-          }
+        name: 'Market Analysis',
+        scriptchains: [
+          { id: '1', name: 'Strategic Market Analyzer' }
         ]
       }
     ]
@@ -217,6 +185,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ onToggle }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const listRef = useRef<HTMLUListElement>(null);
+  const [recentWorkflows] = useLocalStorage<RecentWorkflow[]>('recentWorkflows', []);
 
   const handleToggle = () => {
     setIsCollapsed(!isCollapsed);
@@ -233,7 +202,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ onToggle }) => {
 
   const isItemExpanded = (itemId: string) => expandedItems.includes(itemId);
 
-  const handleKeyDown = (e: React.KeyboardEvent, itemId: string, type: 'project' | 'workspace' | 'loci' | 'scriptchain') => {
+  const handleKeyDown = (e: React.KeyboardEvent, itemId: string, type: 'project' | 'workspace' | 'scriptchain') => {
     if (!listRef.current) return;
 
     const items = Array.from(listRef.current.querySelectorAll('[role="menuitem"]'));
@@ -268,7 +237,7 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ onToggle }) => {
       case ' ':
         e.preventDefault();
         if (type === 'scriptchain') {
-          const path = `/projects/${itemId.split('-')[0]}/workspaces/${itemId.split('-')[1]}/loci/${itemId.split('-')[2]}/scriptchains/${itemId.split('-')[3]}`;
+          const path = `/projects/${itemId.split('-')[0]}/workspaces/${itemId.split('-')[1]}/scriptchains/${itemId.split('-')[2]}`;
           navigate(path);
         } else {
           handleItemClick(itemId);
@@ -277,91 +246,8 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ onToggle }) => {
     }
   };
 
-  const renderScriptChain = (scriptChain: ScriptChainItem, projectId: string, workspaceId: string, lociId: string, depth: number) => {
-    const itemId = `${projectId}-${workspaceId}-${lociId}-${scriptChain.id}`;
-    return (
-      <NestedNavItem
-        key={scriptChain.id}
-        depth={depth}
-        onClick={() => navigate(`/projects/${projectId}/workspaces/${workspaceId}/loci/${lociId}/scriptchains/${scriptChain.id}`)}
-        active={location.pathname.includes(`/scriptchains/${scriptChain.id}`)}
-        role="menuitem"
-        id={itemId}
-        tabIndex={0}
-        onKeyDown={(e) => handleKeyDown(e, itemId, 'scriptchain')}
-        onFocus={() => setFocusedItem(itemId)}
-        onBlur={() => setFocusedItem(null)}
-      >
-        <ListItemIcon sx={{ minWidth: 32, color: 'text.secondary' }}>
-          <AccountTreeIcon sx={{ fontSize: 18 }} />
-        </ListItemIcon>
-        <Tooltip title={scriptChain.name} placement="right" arrow>
-          <ListItemText 
-            primary={scriptChain.name}
-            primaryTypographyProps={{
-              fontSize: '14px',
-              fontWeight: 400,
-              noWrap: true
-            }}
-          />
-        </Tooltip>
-      </NestedNavItem>
-    );
-  };
-
-  const renderLoci = (loci: LociItem, projectId: string, workspaceId: string, depth: number) => {
-    const itemId = `${projectId}-${workspaceId}-${loci.id}`;
-    return (
-      <React.Fragment key={loci.id}>
-        <NestedNavItem
-          depth={depth}
-          onClick={() => handleItemClick(loci.id)}
-          active={location.pathname.includes(`/loci/${loci.id}`)}
-          role="menuitem"
-          id={itemId}
-          tabIndex={0}
-          onKeyDown={(e) => handleKeyDown(e, itemId, 'loci')}
-          onFocus={() => setFocusedItem(itemId)}
-          onBlur={() => setFocusedItem(null)}
-        >
-          <ListItemIcon sx={{ minWidth: 32, color: 'text.secondary' }}>
-            {isItemExpanded(loci.id) ? (
-              <ExpandMoreIcon sx={{ fontSize: 18, transition: 'transform 0.2s ease' }} />
-            ) : (
-              <ChevronRightIcon sx={{ fontSize: 18, transition: 'transform 0.2s ease' }} />
-            )}
-          </ListItemIcon>
-          <Tooltip title={loci.name} placement="right" arrow>
-            <ListItemText 
-              primary={loci.name}
-              primaryTypographyProps={{
-                fontSize: '14px',
-                fontWeight: 400,
-                noWrap: true
-              }}
-            />
-          </Tooltip>
-        </NestedNavItem>
-        <Collapse 
-          in={isItemExpanded(loci.id)} 
-          timeout="auto" 
-          unmountOnExit
-          sx={{
-            '& .MuiCollapse-wrapper': {
-              transition: 'all 0.2s ease',
-            }
-          }}
-        >
-          {loci.scriptChains.map(scriptChain => 
-            renderScriptChain(scriptChain, projectId, workspaceId, loci.id, depth + 1)
-          )}
-        </Collapse>
-      </React.Fragment>
-    );
-  };
-
   const renderWorkspace = (workspace: WorkspaceItem, projectId: string, depth: number) => {
-    const itemId = `${projectId}-${workspace.id}`;
+    const itemId = workspace.id;
     return (
       <React.Fragment key={workspace.id}>
         <NestedNavItem
@@ -403,7 +289,30 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ onToggle }) => {
             }
           }}
         >
-          {workspace.loci.map(loci => renderLoci(loci, projectId, workspace.id, depth + 1))}
+          {workspace.scriptchains.map(scriptchain => (
+            <NestedNavItem
+              key={scriptchain.id}
+              depth={depth + 1}
+              onClick={() => navigate(`/projects/${projectId}/workspaces/${workspace.id}/scriptchains/${scriptchain.id}`)}
+              active={location.pathname.includes(`/scriptchains/${scriptchain.id}`)}
+              role="menuitem"
+              tabIndex={0}
+            >
+              <ListItemIcon sx={{ minWidth: 32, color: 'text.secondary' }}>
+                <AccountTreeIcon sx={{ fontSize: 18 }} />
+              </ListItemIcon>
+              <Tooltip title={scriptchain.name} placement="right" arrow>
+                <ListItemText 
+                  primary={scriptchain.name}
+                  primaryTypographyProps={{
+                    fontSize: '14px',
+                    fontWeight: 400,
+                    noWrap: true
+                  }}
+                />
+              </Tooltip>
+            </NestedNavItem>
+          ))}
         </Collapse>
       </React.Fragment>
     );
@@ -513,6 +422,58 @@ const NavigationSidebar: React.FC<NavigationSidebarProps> = ({ onToggle }) => {
               }}
             />
           </NavItem>
+
+          {/* Recent Workflows Section */}
+          {recentWorkflows.length > 0 && (
+            <>
+              <Box
+                sx={{
+                  px: 2,
+                  py: 1,
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 1,
+                  mt: 2
+                }}
+              >
+                <HistoryIcon sx={{ fontSize: 16, color: 'text.secondary' }} />
+                <Typography
+                  variant="caption"
+                  sx={{
+                    color: 'text.secondary',
+                    fontWeight: 500,
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}
+                >
+                  Recent
+                </Typography>
+              </Box>
+              {recentWorkflows.slice(0, 5).map((workflow) => (
+                <NavItem
+                  key={workflow.id}
+                  role="menuitem"
+                  tabIndex={0}
+                  onClick={() => navigate(workflow.path)}
+                  active={location.pathname === workflow.path}
+                  sx={{ pl: 3 }}
+                >
+                  <ListItemIcon sx={{ color: 'text.secondary', minWidth: 32 }}>
+                    <AccountTreeIcon sx={{ fontSize: 18 }} />
+                  </ListItemIcon>
+                  <ListItemText
+                    primary={workflow.name}
+                    primaryTypographyProps={{
+                      fontSize: '14px',
+                      fontWeight: 400,
+                      noWrap: true
+                    }}
+                  />
+                </NavItem>
+              ))}
+              <Divider sx={{ my: 2 }} />
+            </>
+          )}
 
           <NavItem
             onClick={() => navigate('/publishing')}

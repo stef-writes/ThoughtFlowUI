@@ -3,7 +3,7 @@ import {
   Box, 
   Container, 
   Typography, 
-  Grid, 
+  Grid as MuiGrid, 
   Card, 
   CardContent, 
   CardActionArea,
@@ -22,32 +22,23 @@ import NavigateNextIcon from '@mui/icons-material/NavigateNext';
 import ScheduleIcon from '@mui/icons-material/Schedule';
 import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
 
-// Mock data for workspaces
-const mockWorkspaces = [
+interface Workspace {
+  id: string;
+  name: string;
+  description: string;
+  scriptchains: number;
+  lastUpdated: string;
+}
+
+// Mock data
+const mockWorkspaces: Workspace[] = [
   {
     id: '1',
-    name: 'Backend Architecture',
-    description: 'Server-side components and infrastructure',
-    loci: 3,
-    lastUpdated: '2024-03-15 14:30',
-    status: 'active',
-  },
-  {
-    id: '2',
-    name: 'Frontend Development',
-    description: 'User interface and client-side logic',
-    loci: 4,
-    lastUpdated: '2024-03-14 09:15',
-    status: 'active',
-  },
-  {
-    id: '3',
-    name: 'Data Pipeline',
-    description: 'Data processing and analytics workflows',
-    loci: 2,
-    lastUpdated: '2024-03-13 16:45',
-    status: 'active',
-  },
+    name: 'Market Analysis',
+    description: 'Market research, competitor analysis, and strategic insights',
+    scriptchains: 1,
+    lastUpdated: '2024-04-14'
+  }
 ];
 
 const ProjectView: React.FC = () => {
@@ -58,7 +49,7 @@ const ProjectView: React.FC = () => {
   // Mock project data
   const project = {
     id: projectId,
-    name: `Project ${projectId}`,
+    name: 'Product Vision',
   };
 
   return (
@@ -88,17 +79,19 @@ const ProjectView: React.FC = () => {
             mb: 4,
             p: 3,
             borderRadius: 2,
-            backgroundColor: alpha(theme.palette.background.paper, 0.6),
-            border: `1px solid ${theme.palette.divider}`,
+            backgroundColor: alpha(theme.palette.primary.main, 0.05),
+            border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
           }}
         >
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: 500 }}>
+          <Typography variant="h5" gutterBottom sx={{ 
+            fontWeight: 500,
+            color: theme.palette.primary.main
+          }}>
             Project Workspaces
           </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: '800px' }}>
-            Workspaces help you organize different aspects of your project. Each workspace can contain multiple loci, 
-            which are specific focus areas or components of your work. Use workspaces to group related features, 
-            user flows, or development phases together.
+          <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+            Workspaces help you organize different aspects of your project. Each workspace can contain multiple scriptchains,
+            allowing you to manage related workflows efficiently.
           </Typography>
         </Box>
 
@@ -110,7 +103,7 @@ const ProjectView: React.FC = () => {
         }}>
           <Typography variant="h4" component="h1" sx={{ 
             fontWeight: 600,
-            color: 'text.primary',
+            color: theme.palette.primary.main,
             letterSpacing: '-0.5px'
           }}>
             Workspaces
@@ -125,9 +118,9 @@ const ProjectView: React.FC = () => {
               borderRadius: 2,
               textTransform: 'none',
               fontWeight: 500,
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+              backgroundColor: theme.palette.primary.main,
               '&:hover': {
-                boxShadow: '0 4px 8px rgba(0,0,0,0.15)',
+                backgroundColor: theme.palette.primary.dark,
               }
             }}
           >
@@ -135,18 +128,21 @@ const ProjectView: React.FC = () => {
           </Button>
         </Box>
 
-        <Grid container spacing={4}>
+        <MuiGrid container spacing={4}>
           {mockWorkspaces.map((workspace) => (
-            <Grid item xs={12} sm={6} md={4} key={workspace.id}>
+            <MuiGrid item xs={12} sm={6} md={4} key={workspace.id}>
               <Card 
                 sx={{ 
                   height: '100%',
                   transition: 'transform 0.2s, box-shadow 0.2s',
                   borderRadius: 3,
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
+                  background: `linear-gradient(45deg, ${alpha(theme.palette.primary.main, 0.05)} 0%, ${alpha(theme.palette.primary.main, 0.02)} 100%)`,
+                  border: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`,
+                  boxShadow: `0 4px 12px ${alpha(theme.palette.primary.main, 0.08)}`,
                   '&:hover': {
                     transform: 'translateY(-4px)',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
+                    boxShadow: `0 8px 24px ${alpha(theme.palette.primary.main, 0.12)}`,
+                    border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
                   },
                 }}
               >
@@ -158,27 +154,29 @@ const ProjectView: React.FC = () => {
                     <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
                       <AccountTreeIcon sx={{ 
                         fontSize: 32, 
-                        color: 'primary.main', 
+                        color: theme.palette.primary.main,
                         mr: 2,
-                        backgroundColor: 'primary.light',
+                        backgroundColor: alpha(theme.palette.primary.main, 0.1),
                         borderRadius: '8px',
                         p: 0.5
                       }} />
                       <Box>
                         <Typography variant="h6" component="h2" sx={{ 
                           fontWeight: 600,
-                          mb: 0.5
+                          mb: 0.5,
+                          color: theme.palette.primary.main
                         }}>
                           {workspace.name}
                         </Typography>
                         <Chip 
-                          label={workspace.status} 
+                          label={workspace.scriptchains} 
                           size="small"
-                          color="success"
                           sx={{ 
                             height: 20,
                             fontSize: '0.75rem',
-                            fontWeight: 500
+                            fontWeight: 500,
+                            backgroundColor: alpha(theme.palette.primary.main, 0.1),
+                            color: theme.palette.primary.main,
                           }}
                         />
                       </Box>
@@ -198,27 +196,16 @@ const ProjectView: React.FC = () => {
                       sx={{ 
                         mt: 'auto',
                         pt: 2,
-                        borderTop: '1px solid',
-                        borderColor: 'divider'
+                        borderTop: `1px solid ${alpha(theme.palette.primary.main, 0.1)}`
                       }}
                     >
                       <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <PlayCircleOutlineIcon sx={{ 
-                          fontSize: 16, 
-                          color: 'text.secondary',
-                          mr: 0.5 
-                        }} />
-                        <Typography variant="body2" color="text.secondary">
-                          {workspace.loci} loci
-                        </Typography>
-                      </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
                         <ScheduleIcon sx={{ 
                           fontSize: 16, 
-                          color: 'text.secondary',
+                          color: theme.palette.primary.main,
                           mr: 0.5 
                         }} />
-                        <Typography variant="body2" color="text.secondary">
+                        <Typography variant="body2" sx={{ color: theme.palette.primary.main }}>
                           Updated: {workspace.lastUpdated}
                         </Typography>
                       </Box>
@@ -226,9 +213,9 @@ const ProjectView: React.FC = () => {
                   </CardContent>
                 </CardActionArea>
               </Card>
-            </Grid>
+            </MuiGrid>
           ))}
-        </Grid>
+        </MuiGrid>
       </Container>
     </Box>
   );

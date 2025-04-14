@@ -159,13 +159,17 @@ const TerminalPanel: React.FC<TerminalPanelProps> = ({ title, isSidebarCollapsed
 
   const getTerminalContent = () => (
     <>
-      <span className="section"># Navigation</span>
-      <span className="command">goto project &lt;project_name&gt;</span>
-      <span className="comment"># Navigate to a specific project</span>
-      <span className="command">goto workspace &lt;workspace_name&gt;</span>
-      <span className="comment"># Navigate to a specific workspace</span>
-      <span className="command">goto loci &lt;loci_name&gt;</span>
-      <span className="comment"># Navigate to a specific loci</span>
+      <div className="help-section">
+        <h3>Navigation Commands</h3>
+        <span className="command">goto projects</span>
+        <span className="comment"># Navigate to projects list</span>
+        <span className="command">goto project &lt;project_name&gt;</span>
+        <span className="comment"># Navigate to a specific project</span>
+        <span className="command">goto workspace &lt;workspace_name&gt;</span>
+        <span className="comment"># Navigate to a specific workspace</span>
+        <span className="command">goto scriptchain &lt;scriptchain_name&gt;</span>
+        <span className="comment"># Navigate to a specific scriptchain</span>
+      </div>
 
       <span className="section"># Operations</span>
       <span className="command">analyze &lt;node_id | chain_id&gt;</span>

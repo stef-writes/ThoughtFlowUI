@@ -24,39 +24,12 @@ const mockProjects = [
   {
     id: '1',
     name: 'Product Vision',
-    description: 'Product strategy, roadmap, and feature prioritization',
-    workspaces: 3,
-    teamSize: 8,
-    lastUpdated: '2024-03-15',
+    description: 'Market research, competitor analysis, and strategic insights',
+    workspaces: 1,
+    teamSize: 1,
+    lastUpdated: '2024-04-14',
     status: 'active',
-  },
-  {
-    id: '2',
-    name: 'Technical Architecture',
-    description: 'System design, infrastructure, and technical decisions',
-    workspaces: 3,
-    teamSize: 6,
-    lastUpdated: '2024-03-14',
-    status: 'active',
-  },
-  {
-    id: '3',
-    name: 'User Experience',
-    description: 'User research, design thinking, and product feedback',
-    workspaces: 3,
-    teamSize: 12,
-    lastUpdated: '2024-03-13',
-    status: 'active',
-  },
-  {
-    id: '4',
-    name: 'Growth Strategy',
-    description: 'Marketing, growth hacking, and user acquisition',
-    workspaces: 3,
-    teamSize: 6,
-    lastUpdated: '2024-03-12',
-    status: 'active',
-  },
+  }
 ];
 
 const Projects: React.FC = () => {

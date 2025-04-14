@@ -1,246 +1,217 @@
-import React from 'react';
-import { 
-  Box, 
-  Container, 
-  Typography, 
-  Grid, 
-  Card, 
-  CardContent, 
-  CardActionArea,
+import React, { useState } from 'react';
+import { useParams, useNavigate } from 'react-router-dom';
+import {
+  Box,
+  Typography,
+  Grid,
+  Card,
+  CardContent,
+  CardActions,
   Button,
-  Breadcrumbs,
-  Link,
   Chip,
-  Stack,
-  alpha,
-  useTheme
+  IconButton,
+  Tooltip,
+  TextField,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions
 } from '@mui/material';
-import { useNavigate, useParams, Link as RouterLink } from 'react-router-dom';
 import AddIcon from '@mui/icons-material/Add';
-import AccountTreeIcon from '@mui/icons-material/AccountTree';
-import NavigateNextIcon from '@mui/icons-material/NavigateNext';
-import ScheduleIcon from '@mui/icons-material/Schedule';
-import PlayCircleOutlineIcon from '@mui/icons-material/PlayCircleOutline';
+import PlayArrowIcon from '@mui/icons-material/PlayArrow';
+import SettingsIcon from '@mui/icons-material/Settings';
+import ShareIcon from '@mui/icons-material/Share';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 
-// Mock data for loci
-const mockLoci = [
+interface ScriptChain {
+  id: string;
+  name: string;
+  description: string;
+  status: string;
+  lastUpdated: string;
+}
+
+// Mock data for scriptchains
+const initialScriptChains: ScriptChain[] = [
   {
     id: '1',
-    name: 'Authentication Flow',
-    description: 'User authentication and authorization processes',
-    scriptchains: 3,
-    lastUpdated: '2024-03-15 14:30',
+    name: 'Strategic Market Analyzer',
+    description: 'Processes market research, competitor data, and customer feedback to generate strategic insights',
     status: 'active',
-  },
-  {
-    id: '2',
-    name: 'Data Processing',
-    description: 'Data transformation and validation workflows',
-    scriptchains: 4,
-    lastUpdated: '2024-03-14 09:15',
-    status: 'active',
-  },
-  {
-    id: '3',
-    name: 'API Integration',
-    description: 'External service connections and data sync',
-    scriptchains: 2,
-    lastUpdated: '2024-03-13 16:45',
-    status: 'active',
-  },
+    lastUpdated: '2024-04-14'
+  }
 ];
 
 const WorkspaceView: React.FC = () => {
-  const navigate = useNavigate();
   const { projectId, workspaceId } = useParams();
-  const theme = useTheme();
+  const navigate = useNavigate();
+  const [scriptchains, setScriptchains] = useState<ScriptChain[]>(initialScriptChains);
+  const [isNewScriptchainDialogOpen, setIsNewScriptchainDialogOpen] = useState(false);
+  const [newScriptchainName, setNewScriptchainName] = useState('');
+  const [newScriptchainDescription, setNewScriptchainDescription] = useState('');
 
-  // Mock workspace data
-  const workspace = {
-    id: workspaceId,
-    name: `Workspace ${workspaceId}`,
+  const handleCreateScriptchain = () => {
+    if (!newScriptchainName.trim()) return;
+
+    const newScriptchain: ScriptChain = {
+      id: String(Date.now()), // Simple ID generation
+      name: newScriptchainName,
+      description: newScriptchainDescription,
+      status: 'active',
+      lastUpdated: new Date().toISOString().split('T')[0]
+    };
+
+    setScriptchains([...scriptchains, newScriptchain]);
+    setNewScriptchainName('');
+    setNewScriptchainDescription('');
+    setIsNewScriptchainDialogOpen(false);
+    navigate(`/projects/${projectId}/workspaces/${workspaceId}/scriptchains/${newScriptchain.id}`);
   };
 
   return (
-    <Box sx={{ py: 6 }}>
-      <Container maxWidth="lg">
-        <Breadcrumbs 
-          separator={<NavigateNextIcon fontSize="small" />} 
-          sx={{ mb: 4 }}
-        >
-          <Link 
-            component={RouterLink} 
-            to="/" 
-            color="inherit" 
-            sx={{ 
-              textDecoration: 'none',
-              '&:hover': { textDecoration: 'underline' }
-            }}
-          >
-            Projects
-          </Link>
-          <Link 
-            component={RouterLink} 
-            to={`/projects/${projectId}`}
-            color="inherit"
-            sx={{ 
-              textDecoration: 'none',
-              '&:hover': { textDecoration: 'underline' }
-            }}
-          >
-            Project {projectId}
-          </Link>
-          <Typography color="text.primary">{workspace.name}</Typography>
-        </Breadcrumbs>
+    <Box sx={{ p: 3 }}>
+      <Box sx={{ mb: 4 }}>
+        <Typography variant="h4" component="h1" gutterBottom>
+          Workspace Scriptchains
+        </Typography>
+        <Typography variant="body2" color="text.secondary" sx={{ mt: 1 }}>
+          Scriptchains are the core workflows in your workspace. Each scriptchain represents a specific
+          sequence of operations that can be executed, modified, and monitored.
+        </Typography>
+      </Box>
 
-        {/* Description Section */}
-        <Box 
-          sx={{ 
-            mb: 4,
-            p: 3,
-            borderRadius: 2,
-            backgroundColor: alpha(theme.palette.background.paper, 0.6),
-            border: `1px solid ${theme.palette.divider}`,
-          }}
-        >
-          <Typography variant="h5" gutterBottom sx={{ fontWeight: 500 }}>
-            Workspace Loci
-          </Typography>
-          <Typography variant="body1" color="text.secondary" sx={{ maxWidth: '800px' }}>
-            Loci are specific focus areas within your workspace where you can create and manage script chains. 
-            Each locus represents a distinct component or feature of your workflow. Use loci to organize related 
-            script chains and maintain a clear structure for your automation processes.
-          </Typography>
-        </Box>
-
-        <Box sx={{ 
-          display: 'flex', 
-          justifyContent: 'space-between', 
-          alignItems: 'center', 
-          mb: 6 
-        }}>
-          <Typography variant="h4" component="h1" sx={{ 
-            fontWeight: 600,
-            color: 'text.primary',
-            letterSpacing: '-0.5px'
-          }}>
-            Loci
-          </Typography>
-          <Button
-            variant="contained"
-            startIcon={<AddIcon />}
-            onClick={() => {/* Add loci logic */}}
-            sx={{
-              px: 3,
-              py: 1.5,
-              borderRadius: 2,
-              textTransform: 'none',
-              fontWeight: 500,
-              boxShadow: '0 2px 4px rgba(0,0,0,0.1)',
+      <Grid container spacing={3}>
+        <Grid item xs={12} sm={6} md={4}>
+          <Card 
+            sx={{ 
+              height: '100%',
+              display: 'flex',
+              flexDirection: 'column',
+              cursor: 'pointer',
               '&:hover': {
-                boxShadow: '0 4px 8px rgba(0,0,0,0.15)',
+                boxShadow: 6,
+                transform: 'translateY(-2px)',
+                transition: 'all 0.2s ease-in-out'
               }
             }}
+            onClick={() => setIsNewScriptchainDialogOpen(true)}
           >
-            New Loci
-          </Button>
-        </Box>
-
-        <Grid container spacing={4}>
-          {mockLoci.map((loci) => (
-            <Grid item xs={12} sm={6} md={4} key={loci.id}>
-              <Card 
-                sx={{ 
-                  height: '100%',
-                  transition: 'transform 0.2s, box-shadow 0.2s',
-                  borderRadius: 3,
-                  boxShadow: '0 4px 12px rgba(0,0,0,0.08)',
-                  '&:hover': {
-                    transform: 'translateY(-4px)',
-                    boxShadow: '0 8px 24px rgba(0,0,0,0.12)',
-                  },
-                }}
-              >
-                <CardActionArea 
-                  sx={{ height: '100%' }}
-                  onClick={() => navigate(`/projects/${projectId}/workspaces/${workspaceId}/loci/${loci.id}`)}
-                >
-                  <CardContent sx={{ p: 3 }}>
-                    <Box sx={{ display: 'flex', alignItems: 'center', mb: 2 }}>
-                      <AccountTreeIcon sx={{ 
-                        fontSize: 32, 
-                        color: 'primary.main', 
-                        mr: 2,
-                        backgroundColor: 'primary.light',
-                        borderRadius: '8px',
-                        p: 0.5
-                      }} />
-                      <Box>
-                        <Typography variant="h6" component="h2" sx={{ 
-                          fontWeight: 600,
-                          mb: 0.5
-                        }}>
-                          {loci.name}
-                        </Typography>
-                        <Chip 
-                          label={loci.status} 
-                          size="small"
-                          color="success"
-                          sx={{ 
-                            height: 20,
-                            fontSize: '0.75rem',
-                            fontWeight: 500
-                          }}
-                        />
-                      </Box>
-                    </Box>
-                    
-                    <Typography 
-                      variant="body2" 
-                      color="text.secondary"
-                      sx={{ mb: 2 }}
-                    >
-                      {loci.description}
-                    </Typography>
-
-                    <Stack 
-                      direction="row" 
-                      spacing={2}
-                      sx={{ 
-                        mt: 'auto',
-                        pt: 2,
-                        borderTop: '1px solid',
-                        borderColor: 'divider'
-                      }}
-                    >
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <PlayCircleOutlineIcon sx={{ 
-                          fontSize: 16, 
-                          color: 'text.secondary',
-                          mr: 0.5 
-                        }} />
-                        <Typography variant="body2" color="text.secondary">
-                          {loci.scriptchains} scriptchains
-                        </Typography>
-                      </Box>
-                      <Box sx={{ display: 'flex', alignItems: 'center' }}>
-                        <ScheduleIcon sx={{ 
-                          fontSize: 16, 
-                          color: 'text.secondary',
-                          mr: 0.5 
-                        }} />
-                        <Typography variant="body2" color="text.secondary">
-                          Updated: {loci.lastUpdated}
-                        </Typography>
-                      </Box>
-                    </Stack>
-                  </CardContent>
-                </CardActionArea>
-              </Card>
-            </Grid>
-          ))}
+            <CardContent sx={{ flexGrow: 1, display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+              <AddIcon sx={{ fontSize: 48, color: 'text.secondary', mb: 2 }} />
+              <Typography variant="h6" color="text.secondary">
+                New Scriptchain
+              </Typography>
+            </CardContent>
+          </Card>
         </Grid>
-      </Container>
+
+        {scriptchains.map((scriptchain) => (
+          <Grid item xs={12} sm={6} md={4} key={scriptchain.id}>
+            <Card 
+              sx={{ 
+                height: '100%',
+                display: 'flex',
+                flexDirection: 'column',
+                '&:hover': {
+                  boxShadow: 6,
+                  transform: 'translateY(-2px)',
+                  transition: 'all 0.2s ease-in-out'
+                }
+              }}
+            >
+              <CardContent sx={{ flexGrow: 1 }}>
+                <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', mb: 2 }}>
+                  <Typography variant="h6" component="h2">
+                    {scriptchain.name}
+                  </Typography>
+                  <Chip 
+                    label={scriptchain.status}
+                    size="small"
+                    color="success"
+                  />
+                </Box>
+                <Typography variant="body2" color="text.secondary" sx={{ mb: 2 }}>
+                  {scriptchain.description}
+                </Typography>
+                <Typography variant="caption" color="text.secondary">
+                  Updated: {scriptchain.lastUpdated}
+                </Typography>
+              </CardContent>
+              <CardActions sx={{ justifyContent: 'space-between', p: 2 }}>
+                <Button
+                  size="small"
+                  onClick={() => navigate(`/projects/${projectId}/workspaces/${workspaceId}/scriptchains/${scriptchain.id}`)}
+                >
+                  Open
+                </Button>
+                <Box>
+                  <Tooltip title="Run">
+                    <IconButton size="small">
+                      <PlayArrowIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Settings">
+                    <IconButton size="small">
+                      <SettingsIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="Share">
+                    <IconButton size="small">
+                      <ShareIcon />
+                    </IconButton>
+                  </Tooltip>
+                  <Tooltip title="More">
+                    <IconButton size="small">
+                      <MoreVertIcon />
+                    </IconButton>
+                  </Tooltip>
+                </Box>
+              </CardActions>
+            </Card>
+          </Grid>
+        ))}
+      </Grid>
+
+      <Dialog 
+        open={isNewScriptchainDialogOpen} 
+        onClose={() => setIsNewScriptchainDialogOpen(false)}
+        maxWidth="sm"
+        fullWidth
+      >
+        <DialogTitle>Create New Scriptchain</DialogTitle>
+        <DialogContent>
+          <Box sx={{ pt: 2 }}>
+            <TextField
+              autoFocus
+              margin="dense"
+              label="Scriptchain Name"
+              fullWidth
+              value={newScriptchainName}
+              onChange={(e) => setNewScriptchainName(e.target.value)}
+              sx={{ mb: 2 }}
+            />
+            <TextField
+              margin="dense"
+              label="Description"
+              fullWidth
+              multiline
+              rows={3}
+              value={newScriptchainDescription}
+              onChange={(e) => setNewScriptchainDescription(e.target.value)}
+            />
+          </Box>
+        </DialogContent>
+        <DialogActions>
+          <Button onClick={() => setIsNewScriptchainDialogOpen(false)}>Cancel</Button>
+          <Button 
+            onClick={handleCreateScriptchain}
+            variant="contained"
+            disabled={!newScriptchainName.trim()}
+          >
+            Create
+          </Button>
+        </DialogActions>
+      </Dialog>
     </Box>
   );
 };
