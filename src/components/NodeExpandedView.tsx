@@ -22,6 +22,8 @@ import {
   AccordionSummary,
   AccordionDetails,
   Tooltip,
+  Tabs,
+  Tab,
 } from '@mui/material';
 import CloseIcon from '@mui/icons-material/Close';
 import SettingsIcon from '@mui/icons-material/Settings';
@@ -29,6 +31,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import LightbulbIcon from '@mui/icons-material/Lightbulb';
 import ZenModeIcon from '@mui/icons-material/VisibilityOff';
 import NormalModeIcon from '@mui/icons-material/Visibility';
+import WebIcon from '@mui/icons-material/Web';
+import CloudUploadIcon from '@mui/icons-material/CloudUpload';
+import ApiIcon from '@mui/icons-material/Api';
+import StorageIcon from '@mui/icons-material/Storage';
 import { WorkflowNode, NodeMetadata } from '../types/workflow';
 import { useWorkflowStore } from '../store/workflowStore';
 
@@ -60,6 +66,7 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
       version: node?.data.metadata?.version || 1,
     } as NodeMetadata,
   });
+  const [dataSourceTab, setDataSourceTab] = React.useState(0);
 
   // Status colors
   const statusColors = {
@@ -319,6 +326,207 @@ const NodeExpandedView: React.FC<NodeExpandedViewProps> = ({ node, onClose }) =>
           </Box>
         ) : (
           <Box display="flex" flexDirection="column" gap={3} py={2}>
+            {/* Data Source Configuration */}
+            <Accordion 
+              elevation={0}
+              defaultExpanded
+              sx={{ 
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                '&:before': { display: 'none' },
+                '& .MuiAccordionSummary-root': {
+                  minHeight: '48px',
+                  padding: '0 16px',
+                },
+                '& .MuiAccordionDetails-root': {
+                  padding: '16px',
+                }
+              }}
+            >
+              <AccordionSummary
+                expandIcon={<ExpandMoreIcon sx={{ color: 'primary.main' }} />}
+                sx={{ 
+                  bgcolor: 'transparent',
+                  '& .MuiAccordionSummary-content': { my: 0 }
+                }}
+              >
+                <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                  <StorageIcon fontSize="small" color="primary" />
+                  <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>Data Source</Typography>
+                </Box>
+              </AccordionSummary>
+              <AccordionDetails>
+                <Box sx={{ width: '100%' }}>
+                  <Tabs
+                    value={dataSourceTab}
+                    onChange={(_, newValue) => setDataSourceTab(newValue)}
+                    sx={{
+                      mb: 2,
+                      '& .MuiTabs-indicator': {
+                        backgroundColor: 'primary.main',
+                      },
+                    }}
+                  >
+                    <Tab 
+                      icon={<WebIcon />} 
+                      label="Web" 
+                      sx={{ 
+                        minHeight: 48,
+                        color: 'text.secondary',
+                        '&.Mui-selected': { color: 'primary.main' }
+                      }}
+                    />
+                    <Tab 
+                      icon={<CloudUploadIcon />} 
+                      label="File" 
+                      sx={{ 
+                        minHeight: 48,
+                        color: 'text.secondary',
+                        '&.Mui-selected': { color: 'primary.main' }
+                      }}
+                    />
+                    <Tab 
+                      icon={<ApiIcon />} 
+                      label="API" 
+                      sx={{ 
+                        minHeight: 48,
+                        color: 'text.secondary',
+                        '&.Mui-selected': { color: 'primary.main' }
+                      }}
+                    />
+                    <Tab 
+                      icon={<StorageIcon />} 
+                      label="Database" 
+                      sx={{ 
+                        minHeight: 48,
+                        color: 'text.secondary',
+                        '&.Mui-selected': { color: 'primary.main' }
+                      }}
+                    />
+                  </Tabs>
+
+                  {dataSourceTab === 0 && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <TextField
+                        fullWidth
+                        label="URL"
+                        placeholder="https://example.com"
+                        variant="outlined"
+                        size="small"
+                      />
+                      <TextField
+                        fullWidth
+                        label="CSS Selector"
+                        placeholder=".content, #main, etc."
+                        variant="outlined"
+                        size="small"
+                      />
+                      <FormControl fullWidth size="small">
+                        <InputLabel>Data Format</InputLabel>
+                        <Select
+                          label="Data Format"
+                          defaultValue="json"
+                        >
+                          <MenuItem value="json">JSON</MenuItem>
+                          <MenuItem value="html">HTML</MenuItem>
+                          <MenuItem value="text">Text</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  )}
+
+                  {dataSourceTab === 1 && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <Button
+                        variant="outlined"
+                        startIcon={<CloudUploadIcon />}
+                        sx={{ 
+                          borderStyle: 'dashed',
+                          borderWidth: 2,
+                          '&:hover': {
+                            borderStyle: 'solid',
+                          }
+                        }}
+                      >
+                        Drop files here or click to upload
+                      </Button>
+                      <FormControl fullWidth size="small">
+                        <InputLabel>File Type</InputLabel>
+                        <Select
+                          label="File Type"
+                          defaultValue="csv"
+                        >
+                          <MenuItem value="csv">CSV</MenuItem>
+                          <MenuItem value="json">JSON</MenuItem>
+                          <MenuItem value="excel">Excel</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  )}
+
+                  {dataSourceTab === 2 && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <TextField
+                        fullWidth
+                        label="API Endpoint"
+                        placeholder="https://api.example.com/v1/data"
+                        variant="outlined"
+                        size="small"
+                      />
+                      <TextField
+                        fullWidth
+                        label="API Key"
+                        type="password"
+                        variant="outlined"
+                        size="small"
+                      />
+                      <FormControl fullWidth size="small">
+                        <InputLabel>Method</InputLabel>
+                        <Select
+                          label="Method"
+                          defaultValue="get"
+                        >
+                          <MenuItem value="get">GET</MenuItem>
+                          <MenuItem value="post">POST</MenuItem>
+                          <MenuItem value="put">PUT</MenuItem>
+                        </Select>
+                      </FormControl>
+                    </Box>
+                  )}
+
+                  {dataSourceTab === 3 && (
+                    <Box sx={{ display: 'flex', flexDirection: 'column', gap: 2 }}>
+                      <FormControl fullWidth size="small">
+                        <InputLabel>Database Type</InputLabel>
+                        <Select
+                          label="Database Type"
+                          defaultValue="postgres"
+                        >
+                          <MenuItem value="postgres">PostgreSQL</MenuItem>
+                          <MenuItem value="mysql">MySQL</MenuItem>
+                          <MenuItem value="mongodb">MongoDB</MenuItem>
+                        </Select>
+                      </FormControl>
+                      <TextField
+                        fullWidth
+                        label="Connection String"
+                        type="password"
+                        variant="outlined"
+                        size="small"
+                      />
+                      <TextField
+                        fullWidth
+                        label="Query"
+                        multiline
+                        rows={3}
+                        variant="outlined"
+                        size="small"
+                      />
+                    </Box>
+                  )}
+                </Box>
+              </AccordionDetails>
+            </Accordion>
+
             {/* Smart Config */}
             <Accordion 
               elevation={0}
